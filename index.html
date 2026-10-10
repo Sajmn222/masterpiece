@@ -390,7 +390,7 @@ try { contact = cleanContact(new URLSearchParams(location.search).get("c")); } c
 contact = contact || cleanContact(DEFAULT_CONTACT);
 let ownContact = "";
 
-const ORDER = ["sk", "uk", "es", "en", "de", "ro", "sr", "hr", "ar", "pt", "pl"];
+const ORDER = ["sk", "uk", "es", "en", "de", "ro", "sr", "hr", "ar", "pt", "pl", "nl", "fi"];
 
 const L = {
 sk: { name: "Slovenčina", t: {
@@ -751,6 +751,78 @@ pt: { name: "Português", t: {
   { t: "Deus sabe como é", lead: "Talvez você esteja pensando: se eu valho tanto, por que não me sinto assim?", b: ["Deus não ficou longe, lá no céu. Ele se tornou ser humano: Jesus. Ele conheceu a fome, o cansaço, a tristeza, a traição dos amigos e a tentação.", "Ele sabe como é difícil ser humano, porque viveu isso."], r: "Filipenses 2:7 · Hebreus 4:15" },
   { t: "A cruz", b: ["Todos nós carregamos coisas que nos separam de Deus: escolhas erradas, palavras que machucam, erros. Jesus morreu na cruz por elas. Não porque era obrigado, mas porque ama você demais. Ele tomou sobre si o que era nosso."], q: "E no terceiro dia ressuscitou. A morte não tem a última palavra.", r: "João 3:16 · Romanos 5:8" },
   { t: "Você não é um quadro pronto, é uma obra em andamento", b: ["Deus não fez você sem motivo. Você tem um propósito neste mundo que ninguém mais pode cumprir."], q: "“Somos obra dele” (em grego <i>poiēma</i>, obra-prima).", r: "Efésios 2:10" }
+]},
+
+nl: { name: "Nederlands", t: {
+  spread: "Raakte dit je? Stuur het door. Laat deze liefde zich verspreiden.", writeMe: "Wil je meer weten? Stuur me “Ik wil meer weten” op {c}, dan kunnen we samen de Bijbel lezen.",
+  heart: "Misschien voel je soms een lege plek in je hart die niets lijkt te vullen. Jezus kan die vullen. Hij is alles wat we echt nodig hebben.",
+  writeSender: "Wil je meer weten? Stuur een bericht naar degene die je deze pagina stuurde en lees samen de Bijbel.",
+  ownLabel: "Wie jij dit stuurt, stuurt een bericht naar dit Instagram-account. Wil je dat ze jou een bericht sturen? Vul dan het jouwe in:",
+  storyHint: "Link gekopieerd. Voeg in je Instagram-story de sticker “Link” toe en plak hem daar.",
+  langLabel: "Taal",
+  q: "Wat is het grootste meesterwerk ter wereld?",
+  opts: "De Mona Lisa? Beethovens Negende? De sterren aan de nachtelijke hemel?",
+  cta: "Open het en kijk.",
+  openBtn: "Open het boek",
+  camNote: "Om het te openen gebruiken we je voorcamera als spiegel. Het beeld blijft op je telefoon en wordt nergens naartoe gestuurd.",
+  mirrorTitle: "Jij bent het grootste meesterwerk.",
+  mirrorSub: "Niet per ongeluk. Niet toevallig. Precies zoals je bent.",
+  plate: [["Titel", "Jij"], ["Kunstenaar", "God"], ["Waarde", "Onbetaalbaar"]],
+  noCam: "De camera staat uit. Stel je hier je gezicht voor.",
+  why: "Waarom zeg ik dit?",
+  endT: "En nu?",
+  endB: "Je kunt gewoon met God praten, in je eigen woorden. Daar heb je geen speciale zinnen voor nodig.",
+  next: "Verder", back: "Terug", restart: "Opnieuw beginnen", share: "Delen", more: "Ik wil meer weten",
+  more1: "Wil je weten wie Jezus was? Begin dan met het Evangelie van Johannes. Het is het korte verhaal van zijn leven en je leest het in een avond of twee.",
+  more2: "En stuur gerust een bericht naar degene die je deze pagina stuurde. Jullie kunnen er samen over praten.",
+  includePhoto: "Mijn foto aan de afbeelding toevoegen",
+  shareText: "Jij bent het grootste meesterwerk. Kijk maar:",
+  copyLink: "Link kopiëren", copied: "Link gekopieerd",
+  saved: "Je afbeelding is klaar",
+  inappText: "In dit venster werkt de camera niet. Open de pagina in je browser.",
+  inappBtn: "Openen in browser",
+  inappHint: "Of tik bovenaan op ⋯ en kies Openen in browser."
+}, s: [
+  { t: "Waarom zeg ik dit?", b: ["Elke kunstenaar stopt een stukje van zichzelf in zijn werk. God deed hetzelfde met jou. Hij schiep je naar zijn beeld, met jouw gezicht, jouw lach en jouw hart.", "Je bent niet zomaar een nummer tussen miljarden mensen. Je was gewild nog voordat je geboren werd."], r: "Genesis 1:27 · Psalm 139:14 · Jeremia 1:5" },
+  { t: "God weet hoe het voelt", lead: "Misschien denk je nu: als ik zo waardevol ben, waarom voel ik me dan niet zo?", b: ["God bleef niet ergens ver weg in de hemel. Hij werd een mens: Jezus. Hij kende honger, uitputting, verdriet, verraad door zijn vrienden en verleiding.", "Hij weet hoe moeilijk het is om mens te zijn, want Hij heeft het zelf meegemaakt."], r: "Filippenzen 2:7 · Hebreeën 4:15" },
+  { t: "Het kruis", b: ["We dragen allemaal dingen mee die ons van God scheiden: verkeerde keuzes, kwetsende woorden, fouten. Jezus stierf daarvoor aan het kruis. Niet omdat het moest, maar omdat Hij zoveel van je houdt. Hij nam op zich wat eigenlijk bij ons hoorde."], q: "En op de derde dag stond Hij op uit de dood. De dood heeft niet het laatste woord.", r: "Johannes 3:16 · Romeinen 5:8" },
+  { t: "Je bent geen af schilderij, je bent een werk in uitvoering", b: ["God heeft je niet zomaar gemaakt. Je hebt een doel in deze wereld dat niemand anders kan vervullen."], q: "“Wij zijn zijn werk” (in het Grieks <i>poiēma</i>, een meesterwerk).", r: "Efeziërs 2:10" }
+]},
+
+fi: { name: "Suomi", t: {
+  spread: "Jos tämä kosketti sinua, lähetä se eteenpäin. Anna tämän rakkauden levitä.", writeMe: "Haluatko tietää lisää? Lähetä minulle viesti {c}: ”Haluan tietää lisää”, niin voimme lukea Raamattua yhdessä.",
+  heart: "Ehkä tunnet joskus sydämessäsi tyhjän kohdan, jota mikään ei tunnu täyttävän. Jeesus voi täyttää sen. Hän on kaikki, mitä todella tarvitsemme.",
+  writeSender: "Haluatko tietää lisää? Lähetä viesti sille, joka lähetti sinulle tämän sivun, ja lukekaa Raamattua yhdessä.",
+  ownLabel: "Ne, joille lähetät tämän, kirjoittavat tälle Instagram-tilille. Jos haluat, että he kirjoittavat sinulle, vaihda tilalle omasi:",
+  storyHint: "Linkki kopioitu. Lisää Instagram-tarinaasi ”Linkki”-tarra ja liitä se siihen.",
+  langLabel: "Kieli",
+  q: "Mikä on maailman suurin mestariteos?",
+  opts: "Mona Lisa? Beethovenin yhdeksäs sinfonia? Tähdet yötaivaalla?",
+  cta: "Avaa ja katso.",
+  openBtn: "Avaa kirja",
+  camNote: "Kirjan avaamiseen käytämme etukameraasi peilinä. Kuva jää vain puhelimeesi eikä sitä lähetetä minnekään.",
+  mirrorTitle: "Sinä olet suurin mestariteos.",
+  mirrorSub: "Ei vahingossa. Ei sattumalta. Juuri sellaisena kuin olet.",
+  plate: [["Nimi", "Sinä"], ["Taiteilija", "Jumala"], ["Arvo", "Korvaamaton"]],
+  noCam: "Kamera on pois päältä. Kuvittele kasvosi tähän.",
+  why: "Miksi sanon tämän?",
+  endT: "Mitä nyt?",
+  endB: "Voit yksinkertaisesti puhua Jumalalle omin sanoin. Et tarvitse siihen mitään erityisiä lauseita.",
+  next: "Seuraava", back: "Takaisin", restart: "Aloita alusta", share: "Jaa", more: "Haluan tietää lisää",
+  more1: "Jos haluat tietää, kuka Jeesus oli, aloita lukemalla Johanneksen evankeliumi. Se on lyhyt kertomus hänen elämästään, ja sen ehtii lukea illassa tai kahdessa.",
+  more2: "Ja kirjoita rohkeasti sille, joka lähetti sinulle tämän sivun. Voitte jutella siitä yhdessä.",
+  includePhoto: "Lisää kuvaan oma kuvani",
+  shareText: "Sinä olet suurin mestariteos. Katso:",
+  copyLink: "Kopioi linkki", copied: "Linkki kopioitu",
+  saved: "Kuvasi on valmis",
+  inappText: "Kamera ei toimi tässä ikkunassa. Avaa sivu selaimessa.",
+  inappBtn: "Avaa selaimessa",
+  inappHint: "Tai napauta ylhäältä ⋯ ja valitse Avaa selaimessa."
+}, s: [
+  { t: "Miksi sanon tämän?", b: ["Jokainen taiteilija laittaa teokseensa palan itseään. Jumala teki saman sinun kanssasi. Hän loi sinut omaksi kuvakseen: sinun kasvosi, naurusi ja sydämesi.", "Et ole vain numero miljardien ihmisten joukossa. Sinut haluttiin jo ennen kuin synnyit."], r: "1. Mooseksen kirja 1:27 · Psalmi 139:14 · Jeremia 1:5" },
+  { t: "Jumala tietää, miltä se tuntuu", lead: "Ehkä ajattelet nyt: jos olen niin arvokas, miksi en tunne niin?", b: ["Jumala ei jäänyt jonnekin kauas taivaaseen. Hänestä tuli ihminen, Jeesus. Hän koki nälän, uupumuksen, surun, ystävien pettämisen ja kiusauksen.", "Hän tietää, miten vaikeaa on olla ihminen, koska hän eli sen itse."], r: "Filippiläiskirje 2:7 · Heprealaiskirje 4:15" },
+  { t: "Risti", b: ["Me kaikki kannamme sisällämme asioita, jotka erottavat meidät Jumalasta: vääriä valintoja, loukkaavia sanoja, virheitä. Jeesus kuoli niiden vuoksi ristillä. Ei siksi, että hänen oli pakko, vaan koska hän rakastaa sinua niin paljon. Hän otti kantaakseen sen, mikä kuului meille."], q: "Ja kolmantena päivänä hän nousi kuolleista. Kuolema ei saa viimeistä sanaa.", r: "Johannes 3:16 · Roomalaiskirje 5:8" },
+  { t: "Et ole valmis maalaus, olet keskeneräinen teos", b: ["Jumala ei tehnyt sinua ilman syytä. Sinulla on tässä maailmassa tehtävä, jota kukaan muu ei voi täyttää."], q: "”Me olemme hänen tekonsa” (kreikaksi <i>poiēma</i>, mestariteos).", r: "Efesolaiskirje 2:10" }
 ]},
 
 pl: { name: "Polski", t: {
