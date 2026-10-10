@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="Ty si to najväčšie majstrovské dielo">
+<meta property="og:description" content="Otvor a pozri sa.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px)}</style>
+</head>
+<body>
+<title>Majstrovské dielo</title>
+<meta name="description" content="Ty si to najväčšie majstrovské dielo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap">
+<style>
+/* Layout: a dark gallery wall. A leather book opens into a gilded frame (the mirror),
+   then quiet museum rooms carry the explanation, one thought per screen. */
+:root {
+  --wall: #15171c;
+  --wall-2: #1e2129;
+  --ink: #ebe6dc;
+  --muted: #9497a3;
+  --gold: #c9a560;
+  --gold-hi: #f0dca6;
+  --gold-lo: #7d6230;
+  --leather: #22372b;
+  --leather-dk: #12201a;
+  --paper: #ede5d3;
+  --paper-ink: #2a2620;
+  --display: "EB Garamond", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --body: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+:root[lang="ar"] {
+  --display: "Amiri", "Noto Naskh Arabic", "Times New Roman", serif;
+  --body: "IBM Plex Sans Arabic", "Noto Sans Arabic", Tahoma, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--wall);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(120% 70% at 50% 0%, var(--wall-2), transparent 70%),
+    var(--wall);
+}
+button, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; border-radius: 4px; }
+
+/* top bar */
+.bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px;
+}
+.brand {
+  font-family: "EB Garamond", Georgia, serif; font-style: italic;
+  color: var(--gold); font-size: 18px; letter-spacing: .02em;
+}
+.lang { display: flex; align-items: center; gap: 6px; }
+.lang label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.lang select {
+  appearance: none; -webkit-appearance: none;
+  background: transparent; border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 999px; padding: 6px 30px 6px 14px; font-size: 14px; color: var(--ink);
+  background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 55%, calc(100% - 11px) 55%;
+  background-size: 5px 5px; background-repeat: no-repeat;
+}
+[dir="rtl"] .lang select { padding: 6px 14px 6px 30px; background-position: 16px 55%, 11px 55%; }
+.lang select option { background: var(--wall-2); color: var(--ink); }
+
+/* in-app browser banner */
+.inapp {
+  margin: 0 16px 8px; padding: 12px 14px; border-radius: 12px;
+  background: var(--paper); color: var(--paper-ink); font-size: 14px; line-height: 1.45;
+  display: grid; gap: 8px;
+}
+.inapp .row { display: flex; flex-wrap: wrap; gap: 8px; }
+.inapp a, .inapp button {
+  border: 0; border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: 13px;
+  background: var(--paper-ink); color: var(--paper); text-decoration: none; cursor: pointer;
+}
+.inapp button.ghost { background: transparent; color: var(--paper-ink); box-shadow: inset 0 0 0 1px var(--paper-ink); }
+.inapp small { opacity: .75; }
+
+/* stage + screens */
+#stage { position: relative; flex: 1; min-height: 0; }
+.screen {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 8px 16px 24px;
+  display: flex; flex-direction: column; align-items: center;
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity .55s ease, transform .55s ease, visibility 0s linear .55s;
+}
+.screen.on { opacity: 1; visibility: visible; transform: none; transition: opacity .55s ease, transform .55s ease; }
+.inner { width: 100%; max-width: 440px; margin-block: auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+
+/* the book */
+.book-wrap { perspective: 1400px; width: min(82vw, 330px); }
+.book {
+  position: relative; width: 100%; aspect-ratio: 3 / 4.2; max-width: 100%;
+  transform-style: preserve-3d;
+}
+.book .pages {
+  position: absolute; inset: 0 0 0 6px; border-radius: 3px 8px 8px 3px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 2px, rgba(0,0,0,.05) 2px 3px) right / 10px 100% no-repeat,
+    linear-gradient(135deg, #f6efe0, var(--paper));
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.8);
+  display: grid; place-items: center;
+}
+.book .pages .glint {
+  width: 62%; aspect-ratio: 3/4; border-radius: 50% / 40%;
+  background: linear-gradient(160deg, #e9edf2, #9aa3ad 55%, #dfe4ea);
+  box-shadow: 0 0 0 6px var(--gold), 0 0 0 7px var(--gold-lo);
+  opacity: .85;
+}
+.cover {
+  position: absolute; inset: 0; border-radius: 4px 10px 10px 4px;
+  transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.25,1), opacity .4s ease .8s;
+  background:
+    radial-gradient(120% 90% at 30% 20%, rgba(255,255,255,.07), transparent 60%),
+    repeating-radial-gradient(circle at 40% 60%, rgba(0,0,0,.08) 0 1px, transparent 1px 3px),
+    linear-gradient(160deg, var(--leather), var(--leather-dk));
+  box-shadow: inset 8px 0 14px -6px rgba(0,0,0,.6), inset -1px 0 0 rgba(255,255,255,.06), 0 30px 60px -18px rgba(0,0,0,.85);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+  padding: 34px 26px; gap: 14px; color: var(--gold-hi);
+  backface-visibility: hidden;
+}
+[dir="rtl"] .cover { transform-origin: right center; border-radius: 10px 4px 4px 10px; }
+[dir="rtl"] .book .pages { inset: 0 6px 0 0; }
+.cover::before {
+  content: ""; position: absolute; inset: 12px; border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
+  border-radius: 3px; box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5px color-mix(in srgb, var(--gold) 35%, transparent);
+  pointer-events: none;
+}
+.book.open .cover { transform: rotateY(-165deg); opacity: 0; }
+[dir="rtl"] .book.open .cover { transform: rotateY(165deg); }
+.cover .orn { width: 46px; height: 46px; color: var(--gold); }
+.cover h1 {
+  margin: 0; font-family: var(--display); font-weight: 500; font-size: clamp(24px, 6.4vw, 30px);
+  line-height: 1.15; text-wrap: balance;
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 60%, var(--gold-lo));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.cover p { margin: 0; font-family: var(--display); font-style: italic; font-size: 17px; line-height: 1.4; color: color-mix(in srgb, var(--gold-hi) 80%, var(--leather)); text-wrap: balance; }
+:root[lang="ar"] .cover p { font-style: normal; }
+.cover .cta { font-style: normal; font-family: var(--body); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+:root[lang="ar"] .cover .cta { letter-spacing: 0; font-size: 15px; }
+
+.btn {
+  border: 0; cursor: pointer; border-radius: 999px; padding: 14px 26px; font-weight: 700; font-size: 16px;
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: #241c0c;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--gold) 70%, transparent);
+  transition: transform .15s ease;
+}
+.btn:active { transform: scale(.97); }
+.btn.quiet { background: transparent; color: var(--gold-hi); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 60%, transparent); }
+.note { margin: 0; max-width: 34ch; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+.note svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--gold); }
+
+/* mirror */
+.mirror-title {
+  margin: 0; text-align: center; font-family: var(--display); font-weight: 500;
+  font-size: clamp(30px, 8.6vw, 42px); line-height: 1.08; text-wrap: balance;
+}
+.frame {
+  position: relative; width: min(70vw, 290px, 40vh); aspect-ratio: 3 / 4; max-width: 100%;
+  padding: 16px; border-radius: 6px;
+  background:
+    linear-gradient(135deg, var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi));
+  box-shadow: 0 0 0 1px var(--gold-lo), 0 24px 60px -16px rgba(0,0,0,.9), inset 0 0 0 4px rgba(0,0,0,.18);
+}
+.frame .glass {
+  position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 2px;
+  box-shadow: inset 0 0 0 2px var(--gold-lo), inset 0 0 26px rgba(0,0,0,.55);
+  background: linear-gradient(160deg, #dfe5ec, #8c96a2 45%, #c9d1da 70%, #7a8490);
+}
+.frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.frame .shine {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 45%, transparent 55%);
+  background-size: 250% 100%; animation: shine 6s ease-in-out infinite;
+}
+@keyframes shine { 0%, 100% { background-position: 120% 0; } 50% { background-position: -20% 0; } }
+.frame .fallback {
+  position: absolute; inset: 0; display: grid; place-items: end center; padding: 14px;
+  text-align: center; font-size: 13px; line-height: 1.4; color: #2b3138;
+}
+.plate {
+  background: var(--paper); color: var(--paper-ink); border-radius: 2px;
+  padding: 10px 16px; min-width: 200px; max-width: 280px;
+  box-shadow: 0 6px 16px -8px rgba(0,0,0,.8);
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; line-height: 1.4;
+}
+.plate dt { color: color-mix(in srgb, var(--paper-ink) 60%, var(--paper)); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; align-self: center; }
+:root[lang="ar"] .plate dt { letter-spacing: 0; font-size: 12px; }
+.plate dd { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 500; }
+.mirror-sub { margin: 0; text-align: center; color: var(--muted); font-family: var(--display); font-style: italic; font-size: 19px; text-wrap: balance; }
+:root[lang="ar"] .mirror-sub { font-style: normal; }
+
+/* reading rooms */
+.room { align-items: flex-start; text-align: start; gap: 16px; }
+.room .orn { width: 34px; height: 34px; color: var(--gold); }
+.room h2 {
+  margin: 0; font-family: var(--display); font-weight: 500;
+  font-size: clamp(30px, 8vw, 40px); line-height: 1.1; text-wrap: balance; color: var(--ink);
+}
+.room .lead { margin: 0; font-family: var(--display); font-style: italic; font-size: 21px; line-height: 1.4; color: var(--gold-hi); }
+:root[lang="ar"] .room .lead { font-style: normal; }
+.room p { margin: 0; font-size: 17px; line-height: 1.7; max-width: 60ch; }
+.room blockquote {
+  margin: 4px 0; padding-inline-start: 16px; border-inline-start: 2px solid var(--gold);
+  font-family: var(--display); font-size: 22px; line-height: 1.35; color: var(--gold-hi);
+}
+.room blockquote i { font-style: italic; }
+.refs { margin-top: 6px; font-size: 12px; letter-spacing: .04em; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.refs::before { content: ""; width: 18px; height: 1px; background: var(--gold-lo); }
+
+/* end */
+.actions { display: flex; flex-wrap: wrap; gap: 10px; width: 100%; }
+.actions .btn { flex: 1 1 160px; }
+.photo-opt { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
+.photo-opt input { width: 20px; height: 20px; accent-color: var(--gold); }
+.photo-opt canvas { width: 40px; height: 53px; border-radius: 3px; box-shadow: 0 0 0 2px var(--gold); }
+.more { display: grid; gap: 12px; padding: 16px; border-radius: 10px; background: var(--wall-2); border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent); }
+.more p { font-size: 16px; }
+.contact { display: grid; gap: 6px; width: 100%; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--gold) 25%, transparent); }
+.contact p { font-size: 16px; }
+.contact p:first-child { font-family: var(--display); font-size: 21px; line-height: 1.35; color: var(--gold-hi); }
+.contact a { color: var(--gold-hi); font-weight: 700; text-underline-offset: 3px; unicode-bidi: isolate; direction: ltr; }
+.toast { min-height: 1.4em; font-size: 13px; color: var(--gold-hi); }
+.link-btn { background: none; border: 0; padding: 4px 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 14px; }
+
+/* bottom nav */
+.nav {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.nav button { min-width: 96px; }
+.dots { display: flex; gap: 7px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--gold) 30%, transparent); transition: background .3s, transform .3s; }
+.dots i.on { background: var(--gold-hi); transform: scale(1.35); }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .screen.on, .cover { transition: none; }
+  .frame .shine { animation: none; }
+}
+</style>
+
+<div id="app">
+  <header class="bar">
+    <span class="brand" aria-hidden="true">poiēma</span>
+    <div class="lang">
+      <label for="langSel" data-t="langLabel">Jazyk</label>
+      <select id="langSel"></select>
+    </div>
+  </header>
+
+  <div class="inapp" id="inapp" hidden>
+    <div data-t="inappText"></div>
+    <div class="row">
+      <a id="inappOpen" href="#" target="_blank" rel="noopener" data-t="inappBtn" hidden></a>
+      <button type="button" class="ghost" id="inappCopy" data-t="copyLink"></button>
+    </div>
+    <small data-t="inappHint"></small>
+  </div>
+
+  <main id="stage">
+    <!-- 0: closed book -->
+    <section class="screen on" id="sc0" aria-live="polite">
+      <div class="inner">
+        <div class="book-wrap">
+          <div class="book" id="book">
+            <div class="pages" aria-hidden="true"><div class="glint"></div></div>
+            <div class="cover">
+              <svg class="orn" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <rect x="9" y="5" width="30" height="38" rx="1.5"/><rect x="14" y="11" width="20" height="26" rx="10"/>
+                <path d="M24 2v3M24 43v3M5 24h4M39 24h4"/>
+              </svg>
+              <h1 data-t="q"></h1>
+              <p data-t="opts"></p>
+              <p class="cta" data-t="cta"></p>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn" id="openBtn" data-t="openBtn"></button>
+        <p class="note">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+          <span data-t="camNote"></span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 1: mirror -->
+    <section class="screen" id="sc1">
+      <div class="inner">
+        <h2 class="mirror-title" data-t="mirrorTitle"></h2>
+        <div class="frame">
+          <div class="glass">
+            <video id="cam" playsinline muted autoplay hidden></video>
+            <div class="fallback" id="camFallback"><span data-t="noCam"></span></div>
+            <div class="shine"></div>
+          </div>
+        </div>
+        <dl class="plate" id="plate"></dl>
+        <p class="mirror-sub" data-t="mirrorSub"></p>
+        <button type="button" class="btn" id="whyBtn" data-t="why"></button>
+      </div>
+    </section>
+
+    <!-- 2..5: reading rooms (filled from data) -->
+    <section class="screen" id="sc2"><div class="inner room"></div></section>
+    <section class="screen" id="sc3"><div class="inner room"></div></section>
+    <section class="screen" id="sc4"><div class="inner room"></div></section>
+    <section class="screen" id="sc5"><div class="inner room"></div></section>
+
+    <!-- 6: what now -->
+    <section class="screen" id="sc6">
+      <div class="inner room">
+        <svg class="orn" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M24 6v36M14 16h20"/><circle cx="24" cy="24" r="20" opacity=".35"/></svg>
+        <h2 data-t="endT"></h2>
+        <p data-t="endB"></p>
+        <label class="photo-opt" id="photoOpt" hidden>
+          <input type="checkbox" id="usePhoto">
+          <canvas id="thumb" width="120" height="160"></canvas>
+          <span data-t="includePhoto"></span>
+        </label>
+        <div class="actions">
+          <button type="button" class="btn" id="shareBtn" data-t="share"></button>
+          <button type="button" class="btn quiet" id="moreBtn" data-t="more" aria-expanded="false" aria-controls="morePanel"></button>
+        </div>
+        <div class="contact">
+          <p data-t="spread"></p>
+          <p id="writeMe"></p>
+        </div>
+        <div class="toast" id="toast" role="status"></div>
+        <div class="more" id="morePanel" hidden>
+          <p data-t="more1"></p>
+        </div>
+        <div class="actions">
+          <button type="button" class="link-btn" id="copyBtn" data-t="copyLink"></button>
+          <button type="button" class="link-btn" id="restartBtn" data-t="restart"></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav" id="nav" hidden>
+    <button type="button" class="btn quiet" id="backBtn" data-t="back"></button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <button type="button" class="btn" id="nextBtn" data-t="next"></button>
+  </nav>
+</div>
+
+<script>
+/* Set this to the public address once the site is hosted (e.g. "https://masterpiece.netlify.app/").
+   Left empty, share links use the current page address. */
+const SITE_URL = "https://sajmn222.github.io/masterpiece/";
+/* Where people can write to you. Replace the placeholder with your real handle. */
+const CONTACT = { label: "@tvoj_instagram", url: "https://instagram.com/tvoj_instagram" };
+
+const ORDER = ["sk", "uk", "es", "en", "de", "ro", "sr", "hr", "ar", "pt", "pl"];
+
+const L = {
+sk: { name: "Slovenčina", t: {
+  spread: "Ak ťa to oslovilo, pošli to ďalej. Nech sa táto láska šíri.", writeMe: "Chceš vedieť viac? Napíš mi na {c} „Chcem vedieť viac“ a môžeme spolu čítať Bibliu.",
+  langLabel: "Jazyk",
+  q: "Čo je najväčšie majstrovské dielo na svete?",
+  opts: "Mona Lisa? Beethovenova Deviata? Hviezdna obloha nad horami?",
+  cta: "Otvor a pozri sa.",
+  openBtn: "Otvoriť knihu",
+  camNote: "Na otvorenie použijeme prednú kameru ako zrkadlo. Obraz zostáva len v tvojom telefóne a nikam sa neposiela.",
+  mirrorTitle: "Ty si to najväčšie majstrovské dielo.",
+  mirrorSub: "Nie omylom, nie náhodou. Presne takto.",
+  plate: [["Názov", "Ty"], ["Autor", "Boh"], ["Hodnota", "Neoceniteľná"]],
+  noCam: "Kamera je vypnutá. Predstav si tu svoju tvár.",
+  why: "Prečo to hovorím?",
+  endT: "Čo ďalej?",
+  endB: "Môžeš sa Bohu jednoducho prihovoriť vlastnými slovami, nepotrebuješ na to žiadne špeciálne vety.",
+  next: "Ďalej", back: "Späť", restart: "Začať odznova", share: "Zdieľať", more: "Chcem vedieť viac",
+  more1: "Ak chceš vedieť, kto bol Ježiš, začni čítať Evanjelium podľa Jána. Je to krátky príbeh jeho života a prečítaš ho za večer či dva.",
+  more2: "A pokojne napíš tomu, kto ti túto stránku poslal. Môžete sa o tom spolu porozprávať.",
+  includePhoto: "Pridať moju fotku na obrázok",
+  shareText: "Ty si to najväčšie majstrovské dielo. Pozri sa:",
+  copyLink: "Kopírovať odkaz", copied: "Odkaz je skopírovaný",
+  saved: "Obrázok je pripravený",
+  inappText: "V tomto okne kamera nefunguje. Otvor stránku v prehliadači.",
+  inappBtn: "Otvoriť v prehliadači",
+  inappHint: "Alebo ťukni na ⋯ hore a vyber Otvoriť v prehliadači."
+}, s: [
+  { t: "Prečo to hovorím?", b: ["Umelec dá do svojho diela kúsok seba. Boh urobil s tebou to isté. Stvoril ťa na svoj obraz, s tvojou tvárou, smiechom a srdcom.", "Nie si len číslo medzi miliardami ľudí. Bol si chcený skôr, než si sa narodil."], r: "Genezis 1:27 · Žalm 139:14 · Jeremiáš 1:5" },
+  { t: "Boh vie, aké to je", lead: "Možno si teraz myslíš: ak som taký vzácny, prečo sa tak necítim?", b: ["Boh nezostal niekde ďaleko v nebi. Stal sa človekom, Ježišom. Zažil hlad, únavu, smútok, zradu priateľov aj pokušenie.", "Vie, aké ťažké je byť človekom, lebo to prežil."], r: "Filipanom 2:7 · Hebrejom 4:15" },
+  { t: "Kríž", b: ["Všetci v sebe nosíme veci, ktoré nás oddeľujú od Boha: zlé rozhodnutia, slová aj chyby. Ježiš za ne zomrel na kríži, nie preto, že musel, ale preto, že ťa tak strašne miluje. Zobral na seba to, čo patrilo nám."], q: "A tretí deň vstal z mŕtvych. Smrť nemá posledné slovo.", r: "Ján 3:16 · Rimanom 5:8" },
+  { t: "Nie si dokončený obraz, ale rozpracovaný", b: ["Boh ťa netvoril len tak. Máš na tomto svete úlohu, ktorú nikto iný nesplní."], q: "„Sme jeho dielo“ (po grécky <i>poiéma</i>, majstrovské dielo).", r: "Efezanom 2:10" }
+]},
+
+uk: { name: "Українська", t: {
+  spread: "Якщо це тебе зачепило, поділись далі. Нехай ця любов поширюється.", writeMe: "Хочеш дізнатися більше? Напиши мені на {c} «Хочу дізнатися більше», і ми можемо разом читати Біблію.",
+  langLabel: "Мова",
+  q: "Який найбільший шедевр у світі?",
+  opts: "Мона Ліза? Дев'ята симфонія Бетховена? Зорі на нічному небі?",
+  cta: "Відкрий і подивись.",
+  openBtn: "Відкрити книгу",
+  camNote: "Щоб відкрити книгу, ми використаємо фронтальну камеру як дзеркало. Зображення залишається тільки у твоєму телефоні й нікуди не надсилається.",
+  mirrorTitle: "Ти — найбільший шедевр.",
+  mirrorSub: "Не помилково. Не випадково. Саме так.",
+  plate: [["Назва", "Ти"], ["Автор", "Бог"], ["Цінність", "Неоціненна"]],
+  noCam: "Камера вимкнена. Уяви тут своє обличчя.",
+  why: "Чому я це кажу?",
+  endT: "Що далі?",
+  endB: "Ти можеш просто заговорити до Бога своїми словами. Для цього не потрібні жодні особливі фрази.",
+  next: "Далі", back: "Назад", restart: "Почати спочатку", share: "Поділитися", more: "Хочу дізнатися більше",
+  more1: "Якщо хочеш дізнатися, ким був Ісус, почни читати Євангеліє від Івана. Це коротка історія Його життя, її можна прочитати за вечір чи два.",
+  more2: "І сміливо напиши тому, хто надіслав тобі цю сторінку. Ви можете поговорити про це разом.",
+  includePhoto: "Додати моє фото на картинку",
+  shareText: "Ти — найбільший шедевр. Подивись:",
+  copyLink: "Копіювати посилання", copied: "Посилання скопійовано",
+  saved: "Картинка готова",
+  inappText: "У цьому вікні камера не працює. Відкрий сторінку в браузері.",
+  inappBtn: "Відкрити в браузері",
+  inappHint: "Або натисни ⋯ угорі й вибери «Відкрити в браузері»."
+}, s: [
+  { t: "Чому я це кажу?", b: ["Кожен митець вкладає у свій твір частинку себе. Бог зробив те саме з тобою. Він створив тебе на Свій образ, з твоїм обличчям, сміхом і серцем.", "Ти не просто число серед мільярдів людей. Тебе хотіли ще до твого народження."], r: "Буття 1:27 · Псалом 139:14 · Єремія 1:5" },
+  { t: "Бог знає, як це", lead: "Можливо, ти зараз думаєш: якщо я така цінність, чому я цього не відчуваю?", b: ["Бог не залишився десь далеко на небі. Він став людиною, Ісусом. Він пізнав голод, втому, смуток, зраду друзів і спокусу.", "Він знає, як важко бути людиною, бо сам це прожив."], r: "Филип'янам 2:7 · Євреям 4:15" },
+  { t: "Хрест", b: ["Усі ми носимо в собі те, що відділяє нас від Бога: неправильні рішення, слова, які ранять, помилки. Ісус помер за них на хресті. Не тому, що мусив, а тому, що так сильно тебе любить. Він узяв на себе те, що належало нам."], q: "А на третій день Він воскрес із мертвих. Смерть не має останнього слова.", r: "Івана 3:16 · Римлянам 5:8" },
+  { t: "Ти не завершена картина, а твір, над яким ще працюють", b: ["Бог створив тебе не просто так. У тебе є місія в цьому світі, яку ніхто інший не виконає."], q: "«Ми — Його творіння» (грецькою <i>poiēma</i>, шедевр).", r: "Ефесянам 2:10" }
+]},
+
+es: { name: "Español", t: {
+  spread: "Si esto te ha llegado, compártelo. Que este amor se siga extendiendo.", writeMe: "¿Quieres saber más? Escríbeme «Quiero saber más» a {c} y podemos leer la Biblia juntos.",
+  langLabel: "Idioma",
+  q: "¿Cuál es la mayor obra maestra del mundo?",
+  opts: "¿La Mona Lisa? ¿La Novena de Beethoven? ¿Las estrellas del cielo de noche?",
+  cta: "Ábrelo y mira.",
+  openBtn: "Abrir el libro",
+  camNote: "Para abrirlo usaremos la cámara frontal como espejo. La imagen se queda solo en tu teléfono y no se envía a ningún sitio.",
+  mirrorTitle: "Tú eres la mayor obra maestra.",
+  mirrorSub: "No por error. No por casualidad. Tal como eres.",
+  plate: [["Título", "Tú"], ["Autor", "Dios"], ["Valor", "Incalculable"]],
+  noCam: "La cámara está apagada. Imagina aquí tu cara.",
+  why: "¿Por qué te digo esto?",
+  endT: "¿Y ahora qué?",
+  endB: "Puedes simplemente hablar con Dios con tus propias palabras. No necesitas frases especiales.",
+  next: "Siguiente", back: "Atrás", restart: "Volver a empezar", share: "Compartir", more: "Quiero saber más",
+  more1: "Si quieres saber quién fue Jesús, empieza a leer el Evangelio de Juan. Es la historia corta de su vida y se lee en una o dos tardes.",
+  more2: "Y escríbele con confianza a quien te mandó esta página. Seguro que le encantará hablarlo contigo.",
+  includePhoto: "Añadir mi foto a la imagen",
+  shareText: "Tú eres la mayor obra maestra. Mira:",
+  copyLink: "Copiar enlace", copied: "Enlace copiado",
+  saved: "La imagen está lista",
+  inappText: "La cámara no funciona en esta ventana. Abre la página en el navegador.",
+  inappBtn: "Abrir en el navegador",
+  inappHint: "O toca ⋯ arriba y elige Abrir en el navegador."
+}, s: [
+  { t: "¿Por qué te digo esto?", b: ["Todo artista pone un poco de sí mismo en su obra. Dios hizo lo mismo contigo. Te creó a su imagen, con tu cara, tu risa y tu corazón.", "No eres solo un número entre miles de millones de personas. Dios te quiso antes de que nacieras."], r: "Génesis 1:27 · Salmo 139:14 · Jeremías 1:5" },
+  { t: "Dios sabe lo que se siente", lead: "Quizás ahora estés pensando: si valgo tanto, ¿por qué no lo siento así?", b: ["Dios no se quedó lejos, en el cielo. Se hizo hombre: Jesús. Conoció el hambre, el cansancio, la tristeza, la traición de sus amigos y la tentación.", "Sabe lo difícil que es ser humano, porque lo vivió."], r: "Filipenses 2:7 · Hebreos 4:15" },
+  { t: "La cruz", b: ["Todos llevamos dentro cosas que nos separan de Dios: malas decisiones, palabras que hieren, errores. Jesús murió en la cruz por ellas. No porque tuviera que hacerlo, sino porque te ama muchísimo. Cargó sobre sí lo que nos tocaba a nosotros."], q: "Y al tercer día resucitó. La muerte no tiene la última palabra.", r: "Juan 3:16 · Romanos 5:8" },
+  { t: "No eres un cuadro terminado, eres una obra en proceso", b: ["Dios no te hizo sin un motivo. Tienes una misión en este mundo que nadie más puede cumplir."], q: "«Somos obra suya» (en griego <i>poiēma</i>, obra maestra).", r: "Efesios 2:10" }
+]},
+
+en: { name: "English", t: {
+  spread: "If this touched you, pass it on. Let this love keep spreading.", writeMe: "Want to know more? Message me “I want to know more” at {c} and we can read the Bible together.",
+  langLabel: "Language",
+  q: "What is the greatest masterpiece in the world?",
+  opts: "The Mona Lisa? Beethoven's Ninth? The stars in the night sky?",
+  cta: "Open it and see.",
+  openBtn: "Open the book",
+  camNote: "To open it, we'll use your front camera as a mirror. The image stays on your phone and is never sent anywhere.",
+  mirrorTitle: "You are the greatest masterpiece.",
+  mirrorSub: "Not by mistake. Not by accident. Exactly as you are.",
+  plate: [["Title", "You"], ["Artist", "God"], ["Value", "Priceless"]],
+  noCam: "The camera is off. Picture your face here.",
+  why: "Why am I saying this?",
+  endT: "What now?",
+  endB: "You can simply talk to God in your own words. You don't need any special phrases.",
+  next: "Next", back: "Back", restart: "Start again", share: "Share", more: "I want to know more",
+  more1: "If you want to know who Jesus was, start reading the Gospel of John. It's the short story of his life, and you can read it in an evening or two.",
+  more2: "And feel free to message the person who sent you this page. You can talk about it together.",
+  includePhoto: "Add my photo to the image",
+  shareText: "You are the greatest masterpiece. Take a look:",
+  copyLink: "Copy link", copied: "Link copied",
+  saved: "Your image is ready",
+  inappText: "The camera doesn't work in this window. Open the page in your browser.",
+  inappBtn: "Open in browser",
+  inappHint: "Or tap ⋯ at the top and choose Open in browser."
+}, s: [
+  { t: "Why am I saying this?", b: ["Every artist puts a piece of themselves into their work. God did the same with you. He created you in His own image, with your face, your laugh and your heart.", "You're not just a number among billions of people. You were wanted before you were even born."], r: "Genesis 1:27 · Psalm 139:14 · Jeremiah 1:5" },
+  { t: "God knows what it's like", lead: "Maybe you're thinking: if I'm so precious, why don't I feel like it?", b: ["God didn't stay far away in heaven. He became a human being, Jesus. He knew hunger, exhaustion, grief, betrayal by his friends and temptation.", "He knows how hard it is to be human, because He lived it."], r: "Philippians 2:7 · Hebrews 4:15" },
+  { t: "The cross", b: ["We all carry things that separate us from God: wrong choices, hurtful words, mistakes. Jesus died on the cross for them, not because He had to, but because He loves you that much. He took on Himself what belonged to us."], q: "And on the third day He rose from the dead. Death doesn't get the last word.", r: "John 3:16 · Romans 5:8" },
+  { t: "You're not a finished painting, you're a work in progress", b: ["God didn't make you without a reason. You have a purpose in this world that no one else can fulfill."], q: "“We are His workmanship” (in Greek <i>poiēma</i>, a masterpiece).", r: "Ephesians 2:10" }
+]},
+
+de: { name: "Deutsch", t: {
+  spread: "Wenn dich das berührt hat, gib es weiter. Damit sich diese Liebe ausbreitet.", writeMe: "Willst du mehr wissen? Schreib mir „Ich will mehr wissen“ an {c}, dann können wir zusammen die Bibel lesen.",
+  langLabel: "Sprache",
+  q: "Was ist das größte Meisterwerk der Welt?",
+  opts: "Die Mona Lisa? Beethovens Neunte? Die Sterne am Nachthimmel?",
+  cta: "Öffne es und sieh selbst.",
+  openBtn: "Buch öffnen",
+  camNote: "Zum Öffnen nutzen wir die Frontkamera als Spiegel. Das Bild bleibt nur auf deinem Handy und wird nirgendwohin gesendet.",
+  mirrorTitle: "Du bist das größte Meisterwerk.",
+  mirrorSub: "Kein Versehen. Kein Zufall. Genau so, wie du bist.",
+  plate: [["Titel", "Du"], ["Künstler", "Gott"], ["Wert", "Unbezahlbar"]],
+  noCam: "Die Kamera ist aus. Stell dir hier dein Gesicht vor.",
+  why: "Warum sage ich das?",
+  endT: "Und jetzt?",
+  endB: "Du kannst einfach mit Gott reden, mit deinen eigenen Worten. Dafür brauchst du keine besonderen Sätze.",
+  next: "Weiter", back: "Zurück", restart: "Von vorn beginnen", share: "Teilen", more: "Ich will mehr wissen",
+  more1: "Wenn du wissen willst, wer Jesus war, fang an, das Johannesevangelium zu lesen. Es ist die kurze Geschichte seines Lebens, du schaffst es an ein, zwei Abenden.",
+  more2: "Und schreib ruhig der Person, die dir diese Seite geschickt hat. Ihr könnt gemeinsam darüber reden.",
+  includePhoto: "Mein Foto zum Bild hinzufügen",
+  shareText: "Du bist das größte Meisterwerk. Schau mal:",
+  copyLink: "Link kopieren", copied: "Link kopiert",
+  saved: "Dein Bild ist fertig",
+  inappText: "In diesem Fenster funktioniert die Kamera nicht. Öffne die Seite im Browser.",
+  inappBtn: "Im Browser öffnen",
+  inappHint: "Oder tippe oben auf ⋯ und wähle Im Browser öffnen."
+}, s: [
+  { t: "Warum sage ich das?", b: ["Jeder Künstler steckt ein Stück von sich selbst in sein Werk. Gott hat mit dir dasselbe gemacht. Er hat dich nach seinem Bild geschaffen, mit deinem Gesicht, deinem Lachen und deinem Herzen.", "Du bist nicht nur eine Nummer unter Milliarden Menschen. Du warst gewollt, schon bevor du geboren wurdest."], r: "1. Mose 1,27 · Psalm 139,14 · Jeremia 1,5" },
+  { t: "Gott weiß, wie sich das anfühlt", lead: "Vielleicht denkst du jetzt: Wenn ich so wertvoll bin, warum fühle ich mich nicht so?", b: ["Gott ist nicht irgendwo weit weg im Himmel geblieben. Er wurde ein Mensch: Jesus. Er kannte Hunger, Erschöpfung, Trauer, Verrat durch seine Freunde und Versuchung.", "Er weiß, wie schwer es ist, Mensch zu sein, weil er es selbst erlebt hat."], r: "Philipper 2,7 · Hebräer 4,15" },
+  { t: "Das Kreuz", b: ["Wir alle tragen Dinge in uns, die uns von Gott trennen: falsche Entscheidungen, verletzende Worte, Fehler. Jesus ist dafür am Kreuz gestorben. Nicht weil er musste, sondern weil er dich so sehr liebt. Er hat auf sich genommen, was eigentlich uns gehörte."], q: "Und am dritten Tag ist er von den Toten auferstanden. Der Tod hat nicht das letzte Wort.", r: "Johannes 3,16 · Römer 5,8" },
+  { t: "Du bist kein fertiges Bild, du bist ein Werk in Arbeit", b: ["Gott hat dich nicht ohne Grund gemacht. Du hast in dieser Welt eine Aufgabe, die niemand anderes erfüllen kann."], q: "„Wir sind sein Werk“ (auf Griechisch <i>poiēma</i>, ein Meisterwerk).", r: "Epheser 2,10" }
+]},
+
+ro: { name: "Română", t: {
+  spread: "Dacă te-a atins, trimite-o mai departe. Lasă dragostea aceasta să se răspândească.", writeMe: "Vrei să afli mai mult? Scrie-mi „Vreau să aflu mai mult” la {c} și putem citi Biblia împreună.",
+  langLabel: "Limba",
+  q: "Care este cea mai mare capodoperă din lume?",
+  opts: "Mona Lisa? Simfonia a IX-a a lui Beethoven? Stelele de pe cerul nopții?",
+  cta: "Deschide și vezi.",
+  openBtn: "Deschide cartea",
+  camNote: "Ca să deschidem cartea, folosim camera frontală ca oglindă. Imaginea rămâne doar în telefonul tău și nu este trimisă nicăieri.",
+  mirrorTitle: "Tu ești cea mai mare capodoperă.",
+  mirrorSub: "Nu din greșeală. Nu din întâmplare. Exact așa cum ești.",
+  plate: [["Titlu", "Tu"], ["Autor", "Dumnezeu"], ["Valoare", "Inestimabilă"]],
+  noCam: "Camera este oprită. Imaginează-ți aici chipul tău.",
+  why: "De ce spun asta?",
+  endT: "Și acum?",
+  endB: "Poți pur și simplu să vorbești cu Dumnezeu cu propriile tale cuvinte. Nu ai nevoie de nicio formulă specială.",
+  next: "Mai departe", back: "Înapoi", restart: "Ia-o de la capăt", share: "Distribuie", more: "Vreau să aflu mai mult",
+  more1: "Dacă vrei să afli cine a fost Isus, începe să citești Evanghelia după Ioan. E povestea scurtă a vieții Lui și o poți citi în una-două seri.",
+  more2: "Și scrie-i liniștit celui care ți-a trimis pagina asta. Puteți vorbi despre asta împreună.",
+  includePhoto: "Adaugă poza mea pe imagine",
+  shareText: "Tu ești cea mai mare capodoperă. Uită-te:",
+  copyLink: "Copiază linkul", copied: "Link copiat",
+  saved: "Imaginea e gata",
+  inappText: "Camera nu funcționează în această fereastră. Deschide pagina în browser.",
+  inappBtn: "Deschide în browser",
+  inappHint: "Sau apasă pe ⋯ sus și alege Deschide în browser."
+}, s: [
+  { t: "De ce spun asta?", b: ["Orice artist pune o parte din sine în opera lui. Dumnezeu a făcut la fel cu tine. Te-a creat după chipul Său, cu fața ta, cu râsul tău și cu inima ta.", "Nu ești doar un număr printre miliarde de oameni. Dumnezeu te-a dorit înainte să te naști."], r: "Geneza 1:27 · Psalmul 139:14 · Ieremia 1:5" },
+  { t: "Dumnezeu știe cum e", lead: "Poate te gândești acum: dacă valorez atât de mult, de ce nu simt asta?", b: ["Dumnezeu nu a rămas undeva departe, în cer. S-a făcut om: Isus. A cunoscut foamea, oboseala, tristețea, trădarea prietenilor și ispita.", "Știe cât de greu e să fii om, pentru că a trăit asta."], r: "Filipeni 2:7 · Evrei 4:15" },
+  { t: "Crucea", b: ["Toți purtăm în noi lucruri care ne despart de Dumnezeu: alegeri greșite, cuvinte care rănesc, greșeli. Isus a murit pe cruce pentru ele. Nu pentru că era obligat, ci pentru că te iubește atât de mult. A luat asupra Lui ce ne aparținea nouă."], q: "Iar a treia zi a înviat din morți. Moartea nu are ultimul cuvânt.", r: "Ioan 3:16 · Romani 5:8" },
+  { t: "Nu ești un tablou terminat, ești o lucrare în desfășurare", b: ["Dumnezeu nu te-a făcut fără un motiv. Ai un rost în lumea aceasta pe care nimeni altcineva nu-l poate împlini."], q: "„Suntem lucrarea Lui” (în greacă <i>poiēma</i>, o capodoperă).", r: "Efeseni 2:10" }
+]},
+
+sr: { name: "Srpski", t: {
+  spread: "Ako te je ovo dotaklo, pošalji dalje. Neka se ova ljubav širi.", writeMe: "Želiš da saznaš više? Piši mi „Želim da saznam više“ na {c} i možemo zajedno da čitamo Bibliju.",
+  langLabel: "Jezik",
+  q: "Koje je najveće remek-delo na svetu?",
+  opts: "Mona Liza? Betovenova Deveta? Zvezde na noćnom nebu?",
+  cta: "Otvori i pogledaj.",
+  openBtn: "Otvori knjigu",
+  camNote: "Za otvaranje koristimo prednju kameru kao ogledalo. Slika ostaje samo na tvom telefonu i nigde se ne šalje.",
+  mirrorTitle: "Ti si najveće remek-delo.",
+  mirrorSub: "Ne greškom. Ne slučajno. Upravo ovako.",
+  plate: [["Naziv", "Ti"], ["Autor", "Bog"], ["Vrednost", "Neprocenjiva"]],
+  noCam: "Kamera je isključena. Zamisli ovde svoje lice.",
+  why: "Zašto ti ovo govorim?",
+  endT: "Šta sada?",
+  endB: "Možeš jednostavno da razgovaraš sa Bogom svojim rečima. Ne trebaju ti nikakve posebne rečenice.",
+  next: "Dalje", back: "Nazad", restart: "Kreni ispočetka", share: "Podeli", more: "Želim da saznam više",
+  more1: "Ako želiš da saznaš ko je bio Isus, počni da čitaš Jevanđelje po Jovanu. To je kratka priča o njegovom životu i može se pročitati za par večeri.",
+  more2: "I slobodno se javi osobi koja ti je poslala ovu stranicu. Možete o tome zajedno da razgovarate.",
+  includePhoto: "Dodaj moju fotku na sliku",
+  shareText: "Ti si najveće remek-delo. Pogledaj:",
+  copyLink: "Kopiraj link", copied: "Link je kopiran",
+  saved: "Slika je spremna",
+  inappText: "Kamera ne radi u ovom prozoru. Otvori stranicu u pregledaču.",
+  inappBtn: "Otvori u pregledaču",
+  inappHint: "Ili dodirni ⋯ gore i izaberi Otvori u pregledaču."
+}, s: [
+  { t: "Zašto ti ovo govorim?", b: ["Svaki umetnik u svoje delo stavi deo sebe. Bog je isto to uradio sa tobom. Stvorio te je po svom obličju, sa tvojim licem, osmehom i srcem.", "Nisi samo broj među milijardama ljudi. Bog te je želeo i pre tvog rođenja."], r: "Postanje 1,27 · Psalam 139,14 · Jeremija 1,5" },
+  { t: "Bog zna kako je to", lead: "Možda sada misliš: ako toliko vredim, zašto se tako ne osećam?", b: ["Bog nije ostao negde daleko na nebu. Postao je čovek, Isus. Upoznao je glad, umor, tugu, izdaju prijatelja i iskušenje.", "Zna koliko je teško biti čovek, jer je to proživeo."], r: "Filipljanima 2,7 · Jevrejima 4,15" },
+  { t: "Krst", b: ["Svi u sebi nosimo stvari koje nas odvajaju od Boga: loše odluke, reči koje povrede, greške. Isus je za njih umro na krstu. Ne zato što je morao, nego zato što te toliko voli. Uzeo je na sebe ono što je pripadalo nama."], q: "A treći dan je vaskrsao iz mrtvih. Smrt nema poslednju reč.", r: "Jovan 3,16 · Rimljanima 5,8" },
+  { t: "Nisi završena slika, nego delo u nastajanju", b: ["Bog te nije stvorio bez razloga. Imaš na ovom svetu zadatak koji niko drugi ne može da ispuni."], q: "„Njegovo smo delo” (grčki <i>poiēma</i>, remek-delo).", r: "Efescima 2,10" }
+]},
+
+hr: { name: "Hrvatski", t: {
+  spread: "Ako te ovo dotaknulo, pošalji dalje. Neka se ova ljubav širi.", writeMe: "Želiš znati više? Napiši mi „Želim znati više“ na {c} i možemo zajedno čitati Bibliju.",
+  langLabel: "Jezik",
+  q: "Koje je najveće remek-djelo na svijetu?",
+  opts: "Mona Lisa? Beethovenova Deveta? Zvijezde na noćnom nebu?",
+  cta: "Otvori i pogledaj.",
+  openBtn: "Otvori knjigu",
+  camNote: "Za otvaranje koristimo prednju kameru kao ogledalo. Slika ostaje samo na tvom mobitelu i nikamo se ne šalje.",
+  mirrorTitle: "Ti si najveće remek-djelo.",
+  mirrorSub: "Ne greškom. Ne slučajno. Upravo ovako.",
+  plate: [["Naziv", "Ti"], ["Autor", "Bog"], ["Vrijednost", "Neprocjenjiva"]],
+  noCam: "Kamera je isključena. Zamisli ovdje svoje lice.",
+  why: "Zašto ti ovo govorim?",
+  endT: "Što sada?",
+  endB: "Možeš jednostavno razgovarati s Bogom svojim riječima. Ne trebaju ti nikakve posebne rečenice.",
+  next: "Dalje", back: "Natrag", restart: "Kreni ispočetka", share: "Podijeli", more: "Želim znati više",
+  more1: "Ako želiš znati tko je bio Isus, počni čitati Evanđelje po Ivanu. To je kratka priča o njegovu životu i možeš je pročitati za večer ili dvije.",
+  more2: "I slobodno se javi osobi koja ti je poslala ovu stranicu. Možete o tome zajedno razgovarati.",
+  includePhoto: "Dodaj moju fotku na sliku",
+  shareText: "Ti si najveće remek-djelo. Pogledaj:",
+  copyLink: "Kopiraj poveznicu", copied: "Poveznica je kopirana",
+  saved: "Slika je spremna",
+  inappText: "Kamera ne radi u ovom prozoru. Otvori stranicu u pregledniku.",
+  inappBtn: "Otvori u pregledniku",
+  inappHint: "Ili dodirni ⋯ gore i odaberi Otvori u pregledniku."
+}, s: [
+  { t: "Zašto ti ovo govorim?", b: ["Svaki umjetnik u svoje djelo stavi dio sebe. Bog je to isto učinio s tobom. Stvorio te na svoju sliku, s tvojim licem, osmijehom i srcem.", "Nisi samo broj među milijardama ljudi. Bog te želio i prije tvog rođenja."], r: "Postanak 1,27 · Psalam 139,14 · Jeremija 1,5" },
+  { t: "Bog zna kako je to", lead: "Možda sad misliš: ako toliko vrijedim, zašto se tako ne osjećam?", b: ["Bog nije ostao negdje daleko na nebu. Postao je čovjek, Isus. Upoznao je glad, umor, tugu, izdaju prijatelja i kušnju.", "Zna kako je teško biti čovjek, jer je to proživio."], r: "Filipljanima 2,7 · Hebrejima 4,15" },
+  { t: "Križ", b: ["Svi u sebi nosimo stvari koje nas odvajaju od Boga: loše odluke, riječi koje povrijede, pogreške. Isus je za njih umro na križu. Ne zato što je morao, nego zato što te toliko voli. Uzeo je na sebe ono što je pripadalo nama."], q: "A treći dan je uskrsnuo od mrtvih. Smrt nema posljednju riječ.", r: "Ivan 3,16 · Rimljanima 5,8" },
+  { t: "Nisi gotova slika, nego djelo u nastajanju", b: ["Bog te nije stvorio bez razloga. Imaš na ovom svijetu zadatak koji nitko drugi ne može ispuniti."], q: "„Njegovo smo djelo” (grčki <i>poiēma</i>, remek-djelo).", r: "Efežanima 2,10" }
+]},
+
+ar: { name: "العربية", dir: "rtl", t: {
+  spread: "إن لمسك هذا، فشاركه مع غيرك. لتنتشر هذه المحبة.", writeMe: "تريد أن تعرف المزيد؟ اكتب لي «أريد أن أعرف المزيد» على {c} ويمكننا أن نقرأ الكتاب المقدس معًا.",
+  langLabel: "اللغة",
+  q: "ما هي أعظم تحفة فنية في العالم؟",
+  opts: "الموناليزا؟ السيمفونية التاسعة لبيتهوفن؟ النجوم في سماء الليل؟",
+  cta: "افتحه وانظر.",
+  openBtn: "افتح الكتاب",
+  camNote: "لفتح الكتاب سنستخدم الكاميرا الأمامية كمرآة. تبقى الصورة على هاتفك فقط ولا تُرسل إلى أي مكان.",
+  mirrorTitle: "أنت أعظم تحفة فنية.",
+  mirrorSub: "لا عن خطأ، ولا عن صدفة. هكذا تمامًا كما أنت.",
+  plate: [["العنوان", "أنت"], ["الفنان", "الله"], ["القيمة", "لا تُقدَّر بثمن"]],
+  noCam: "الكاميرا مطفأة. تخيّل وجهك هنا.",
+  why: "لماذا أقول هذا؟",
+  endT: "وماذا الآن؟",
+  endB: "يمكنك ببساطة أن تتكلم مع الله بكلماتك الخاصة. لا تحتاج إلى أي عبارات خاصة.",
+  next: "التالي", back: "السابق", restart: "ابدأ من جديد", share: "مشاركة", more: "أريد أن أعرف المزيد",
+  more1: "إن أردت أن تعرف من هو يسوع، ابدأ بقراءة إنجيل يوحنا. إنه قصة قصيرة عن حياته، ويمكنك قراءته في أمسية أو اثنتين.",
+  more2: "ولا تتردد في الكتابة للشخص الذي أرسل لك هذه الصفحة. يمكنكما الحديث عن ذلك معًا.",
+  includePhoto: "أضف صورتي إلى الصورة",
+  shareText: "أنت أعظم تحفة فنية. انظر:",
+  copyLink: "نسخ الرابط", copied: "تم نسخ الرابط",
+  saved: "الصورة جاهزة",
+  inappText: "الكاميرا لا تعمل في هذه النافذة. افتح الصفحة في المتصفح.",
+  inappBtn: "افتح في المتصفح",
+  inappHint: "أو اضغط على ⋯ في الأعلى واختر الفتح في المتصفح."
+}, s: [
+  { t: "لماذا أقول هذا؟", b: ["كل فنان يضع جزءًا من نفسه في عمله. والله فعل الشيء نفسه معك. خلقك على صورته، بوجهك وضحكتك وقلبك.", "لست مجرد رقم بين مليارات البشر. لقد أرادك الله قبل أن تولد."], r: "التكوين 1:27 · المزامير 139:14 · إرميا 1:5" },
+  { t: "الله يعرف كيف يكون ذلك", lead: "ربما تفكر الآن: إن كانت قيمتي كبيرة إلى هذا الحد، فلماذا لا أشعر بذلك؟", b: ["الله لم يبقَ بعيدًا في السماء. لقد صار إنسانًا، يسوع. عرف الجوع والتعب والحزن وخيانة أصدقائه والتجربة.", "هو يعرف كم هو صعب أن تكون إنسانًا، لأنه عاش ذلك بنفسه."], r: "فيلبي 2:7 · العبرانيين 4:15" },
+  { t: "الصليب", b: ["كلنا نحمل في داخلنا أمورًا تفصلنا عن الله: قرارات خاطئة، وكلمات جارحة، وأخطاء. مات يسوع على الصليب من أجلها، لا لأنه كان مضطرًا، بل لأنه يحبك كثيرًا جدًا. حمل على نفسه ما كان علينا."], q: "وفي اليوم الثالث قام من بين الأموات. الموت ليس له الكلمة الأخيرة.", r: "يوحنا 3:16 · رومية 5:8" },
+  { t: "لست لوحة مكتملة، بل عملًا ما زال قيد الإنجاز", b: ["لم يخلقك الله بلا سبب. لك في هذا العالم رسالة لا يستطيع أحد غيرك أن يتممها."], q: "«نحن عمله» (باليونانية <i>poiēma</i>، أي تحفة فنية).", r: "أفسس 2:10" }
+]},
+
+pt: { name: "Português", t: {
+  spread: "Se isso tocou você, passe adiante. Que esse amor continue se espalhando.", writeMe: "Quer saber mais? Me escreva “Quero saber mais” em {c} e podemos ler a Bíblia juntos.",
+  langLabel: "Idioma",
+  q: "Qual é a maior obra-prima do mundo?",
+  opts: "A Mona Lisa? A Nona Sinfonia de Beethoven? As estrelas no céu à noite?",
+  cta: "Abra e veja.",
+  openBtn: "Abrir o livro",
+  camNote: "Para abrir, vamos usar a câmera frontal como espelho. A imagem fica só no seu celular e não é enviada para lugar nenhum.",
+  mirrorTitle: "Você é a maior obra-prima.",
+  mirrorSub: "Não por erro. Não por acaso. Exatamente como você é.",
+  plate: [["Título", "Você"], ["Autor", "Deus"], ["Valor", "Inestimável"]],
+  noCam: "A câmera está desligada. Imagine o seu rosto aqui.",
+  why: "Por que estou dizendo isso?",
+  endT: "E agora?",
+  endB: "Você pode simplesmente falar com Deus com as suas próprias palavras. Não precisa de nenhuma frase especial.",
+  next: "Próximo", back: "Voltar", restart: "Começar de novo", share: "Compartilhar", more: "Quero saber mais",
+  more1: "Se você quer saber quem foi Jesus, comece a ler o Evangelho de João. É a história curta da vida dele e dá para ler em uma ou duas noites.",
+  more2: "E fique à vontade para escrever para quem te mandou esta página. Vocês podem conversar sobre isso.",
+  includePhoto: "Adicionar minha foto à imagem",
+  shareText: "Você é a maior obra-prima. Veja:",
+  copyLink: "Copiar link", copied: "Link copiado",
+  saved: "Sua imagem está pronta",
+  inappText: "A câmera não funciona nesta janela. Abra a página no navegador.",
+  inappBtn: "Abrir no navegador",
+  inappHint: "Ou toque em ⋯ no alto e escolha Abrir no navegador."
+}, s: [
+  { t: "Por que estou dizendo isso?", b: ["Todo artista coloca um pouco de si na sua obra. Deus fez o mesmo com você. Ele criou você à sua imagem, com o seu rosto, o seu sorriso e o seu coração.", "Você não é só um número entre bilhões de pessoas. Deus quis você antes mesmo de você nascer."], r: "Gênesis 1:27 · Salmo 139:14 · Jeremias 1:5" },
+  { t: "Deus sabe como é", lead: "Talvez você esteja pensando: se eu valho tanto, por que não me sinto assim?", b: ["Deus não ficou longe, lá no céu. Ele se tornou ser humano: Jesus. Ele conheceu a fome, o cansaço, a tristeza, a traição dos amigos e a tentação.", "Ele sabe como é difícil ser humano, porque viveu isso."], r: "Filipenses 2:7 · Hebreus 4:15" },
+  { t: "A cruz", b: ["Todos nós carregamos coisas que nos separam de Deus: escolhas erradas, palavras que machucam, erros. Jesus morreu na cruz por elas. Não porque era obrigado, mas porque ama você demais. Ele tomou sobre si o que era nosso."], q: "E no terceiro dia ressuscitou. A morte não tem a última palavra.", r: "João 3:16 · Romanos 5:8" },
+  { t: "Você não é um quadro pronto, é uma obra em andamento", b: ["Deus não fez você sem motivo. Você tem um propósito neste mundo que ninguém mais pode cumprir."], q: "“Somos obra dele” (em grego <i>poiēma</i>, obra-prima).", r: "Efésios 2:10" }
+]},
+
+pl: { name: "Polski", t: {
+  spread: "Jeśli cię to poruszyło, wyślij to dalej. Niech ta miłość się rozchodzi.", writeMe: "Chcesz wiedzieć więcej? Napisz do mnie „Chcę wiedzieć więcej” na {c}, a możemy razem czytać Biblię.",
+  langLabel: "Język",
+  q: "Jakie jest największe arcydzieło na świecie?",
+  opts: "Mona Lisa? IX Symfonia Beethovena? Gwiazdy na nocnym niebie?",
+  cta: "Otwórz i zobacz.",
+  openBtn: "Otwórz książkę",
+  camNote: "Do otwarcia użyjemy przedniej kamery jako lustra. Obraz zostaje tylko w twoim telefonie i nigdzie nie jest wysyłany.",
+  mirrorTitle: "Ty jesteś największym arcydziełem.",
+  mirrorSub: "Nie przez pomyłkę. Nie przypadkiem. Dokładnie tak.",
+  plate: [["Tytuł", "Ty"], ["Autor", "Bóg"], ["Wartość", "Bezcenna"]],
+  noCam: "Kamera jest wyłączona. Wyobraź sobie tutaj swoją twarz.",
+  why: "Dlaczego to mówię?",
+  endT: "Co dalej?",
+  endB: "Możesz po prostu porozmawiać z Bogiem własnymi słowami. Nie potrzebujesz do tego żadnych specjalnych formułek.",
+  next: "Dalej", back: "Wstecz", restart: "Zacznij od nowa", share: "Udostępnij", more: "Chcę wiedzieć więcej",
+  more1: "Jeśli chcesz wiedzieć, kim był Jezus, zacznij czytać Ewangelię według świętego Jana. To krótka historia Jego życia, da się ją przeczytać w jeden lub dwa wieczory.",
+  more2: "I śmiało napisz do osoby, która wysłała ci tę stronę. Możecie o tym razem porozmawiać.",
+  includePhoto: "Dodaj moje zdjęcie do obrazka",
+  shareText: "Jesteś największym arcydziełem. Zobacz:",
+  copyLink: "Kopiuj link", copied: "Link skopiowany",
+  saved: "Obrazek jest gotowy",
+  inappText: "Kamera nie działa w tym oknie. Otwórz stronę w przeglądarce.",
+  inappBtn: "Otwórz w przeglądarce",
+  inappHint: "Albo dotknij ⋯ u góry i wybierz Otwórz w przeglądarce."
+}, s: [
+  { t: "Dlaczego to mówię?", b: ["Każdy artysta wkłada w swoje dzieło cząstkę siebie. Bóg zrobił to samo z tobą. Stworzył cię na swój obraz, z twoją twarzą, twoim śmiechem i twoim sercem.", "Nie jesteś tylko numerem wśród miliardów ludzi. Bóg chciał cię jeszcze przed twoimi narodzinami."], r: "Księga Rodzaju 1,27 · Psalm 139,14 · Jeremiasz 1,5" },
+  { t: "Bóg wie, jak to jest", lead: "Może teraz myślisz: skoro mam taką wartość, dlaczego tego nie czuję?", b: ["Bóg nie został gdzieś daleko w niebie. Stał się człowiekiem, Jezusem. Poznał głód, zmęczenie, smutek, zdradę przyjaciół i pokusę.", "Wie, jak trudno jest być człowiekiem, bo sam to przeżył."], r: "List do Filipian 2,7 · List do Hebrajczyków 4,15" },
+  { t: "Krzyż", b: ["Wszyscy nosimy w sobie rzeczy, które oddzielają nas od Boga: złe wybory, raniące słowa, błędy. Jezus umarł za nie na krzyżu. Nie dlatego, że musiał, ale dlatego, że tak bardzo cię kocha. Wziął na siebie to, co należało do nas."], q: "A trzeciego dnia zmartwychwstał. Śmierć nie ma ostatniego słowa.", r: "Ewangelia Jana 3,16 · List do Rzymian 5,8" },
+  { t: "Nie jesteś skończonym obrazem, jesteś dziełem w trakcie tworzenia", b: ["Bóg nie stworzył cię bez powodu. Masz na tym świecie zadanie, którego nikt inny nie wypełni."], q: "„Jesteśmy Jego dziełem” (po grecku <i>poiēma</i>, arcydzieło).", r: "List do Efezjan 2,10" }
+]}
+};
+
+/* ---------- helpers ---------- */
+const $ = (s) => document.querySelector(s);
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+const ORN = '<svg class="orn" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 24h32M24 8v32"/><circle cx="24" cy="24" r="6"/></svg>';
+
+let lang = "sk";
+let idx = 0;
+const LAST = 6;
+
+function pickLang() {
+  const ok = (c) => c && L[c] ? c : null;
+  let q = null;
+  try { q = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+  const h = (location.hash || "").replace("#", "");
+  const fromNav = (navigator.languages || [navigator.language || ""]).map((x) => {
+    const c = String(x).toLowerCase().slice(0, 2);
+    return { cs: "sk", bs: "hr", me: "sr", sh: "sr" }[c] || c;
+  }).find((c) => L[c]);
+  return ok(q) || ok(h) || ok(store.get("mp-lang")) || fromNav || "en";
+}
+
+function shareUrl() {
+  const base = SITE_URL || (location.origin + location.pathname);
+  return base + (/claude\.ai/.test(base) ? "#" + lang : "?lang=" + lang);
+}
+
+function setLang(c) {
+  lang = c;
+  const d = L[c], t = d.t;
+  document.documentElement.lang = c;
+  document.documentElement.dir = d.dir || "ltr";
+  document.title = t.mirrorTitle.replace(/\.$/, "");
+  document.querySelectorAll("[data-t]").forEach((el) => {
+    const v = t[el.dataset.t];
+    if (typeof v === "string") el.textContent = v;
+  });
+  $("#plate").innerHTML = "";
+  t.plate.forEach(([k, v]) => {
+    const dt = document.createElement("dt"); dt.textContent = k;
+    const dd = document.createElement("dd"); dd.textContent = v;
+    $("#plate").append(dt, dd);
+  });
+  d.s.forEach((s, i) => {
+    const box = document.querySelector("#sc" + (i + 2) + " .inner");
+    box.innerHTML = ORN +
+      "<h2></h2>" +
+      (s.lead ? '<p class="lead"></p>' : "") +
+      s.b.map(() => "<p></p>").join("") +
+      (s.q ? "<blockquote>" + s.q + "</blockquote>" : "") +
+      '<div class="refs"></div>';
+    box.querySelector("h2").textContent = s.t;
+    if (s.lead) box.querySelector(".lead").textContent = s.lead;
+    const ps = box.querySelectorAll("p:not(.lead)");
+    s.b.forEach((p, j) => { ps[j].textContent = p; });
+    box.querySelector(".refs").textContent = s.r;
+  });
+  const wm = $("#writeMe"), parts = t.writeMe.split("{c}"), a = document.createElement("a");
+  a.href = CONTACT.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = CONTACT.label;
+  wm.replaceChildren(parts[0], a, parts[1] || "");
+  $("#langSel").value = c;
+  store.set("mp-lang", c);
+  try {
+    if (/^https?:$/.test(location.protocol) && !/claude/.test(location.hostname)) {
+      const u = new URL(location.href); u.searchParams.set("lang", c); history.replaceState(null, "", u);
+    }
+  } catch (e) {}
+  updateInapp();
+}
+
+/* ---------- navigation ---------- */
+function go(i) {
+  if (i < 0 || i > LAST) return;
+  if (idx === 1 && i !== 1) { snapshot(); stopCam(); }
+  if (i === 1 && camWanted) startCam();
+  idx = i;
+  for (let n = 0; n <= LAST; n++) $("#sc" + n).classList.toggle("on", n === i);
+  $("#nav").hidden = i < 2;
+  $("#nextBtn").hidden = i === LAST;
+  $("#dots").innerHTML = Array.from({ length: LAST }, (_, n) => '<i class="' + (n + 1 === i ? "on" : "") + '"></i>').join("");
+  $("#sc" + i).scrollTop = 0;
+  if (i === LAST) $("#photoOpt").hidden = !hasSnap;
+}
+
+/* ---------- camera (stays on the device) ---------- */
+let stream = null, camWanted = false, hasSnap = false;
+async function startCam() {
+  const v = $("#cam");
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 720 }, height: { ideal: 960 } }, audio: false });
+    v.srcObject = stream; v.hidden = false; $("#camFallback").hidden = true;
+    await v.play().catch(() => {});
+    camWanted = true;
+    return true;
+  } catch (e) {
+    v.hidden = true; $("#camFallback").hidden = false; camWanted = false;
+    return false;
+  }
+}
+function stopCam() {
+  if (stream) stream.getTracks().forEach((t) => t.stop());
+  stream = null;
+}
+function snapshot() {
+  const v = $("#cam");
+  if (!stream || !v.videoWidth) return;
+  const c = $("#thumb"), w = 600, h = 800;
+  c.width = w; c.height = h;
+  const g = c.getContext("2d");
+  const vr = v.videoWidth / v.videoHeight, r = w / h;
+  let sw = v.videoWidth, sh = v.videoHeight, sx = 0, sy = 0;
+  if (vr > r) { sw = sh * r; sx = (v.videoWidth - sw) / 2; } else { sh = sw / r; sy = (v.videoHeight - sh) / 2; }
+  g.save(); g.translate(w, 0); g.scale(-1, 1);
+  g.drawImage(v, sx, sy, sw, sh, 0, 0, w, h);
+  g.restore();
+  hasSnap = true;
+}
+
+/* ---------- story image ---------- */
+function wrap(g, text, maxW) {
+  const words = text.split(" "), lines = [];
+  let line = "";
+  words.forEach((w) => {
+    const test = line ? line + " " + w : w;
+    if (g.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+async function makeStory(withPhoto) {
+  const t = L[lang].t, rtl = L[lang].dir === "rtl";
+  const disp = rtl ? "Amiri" : "EB Garamond", body = rtl ? "IBM Plex Sans Arabic" : "Manrope";
+  const sample = t.mirrorTitle + t.cta + t.plate.flat().join("") + L[lang].s[3].r;
+  try { await Promise.all([document.fonts.load('500 80px "' + disp + '"', sample), document.fonts.load('italic 400 40px "' + disp + '"', sample), document.fonts.load('400 30px "' + body + '"', sample), document.fonts.load('italic 400 40px "EB Garamond"', "poiēma")]); } catch (e) {}
+  const W = 1080, H = 1920, c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d");
+  const css = getComputedStyle(document.documentElement);
+  const col = (n) => css.getPropertyValue(n).trim();
+  g.direction = rtl ? "rtl" : "ltr";
+  g.textAlign = "center";
+
+  const bg = g.createRadialGradient(W / 2, 300, 50, W / 2, 500, 1400);
+  bg.addColorStop(0, col("--wall-2")); bg.addColorStop(1, col("--wall"));
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+
+  g.fillStyle = col("--gold"); g.font = 'italic 400 40px "EB Garamond", Georgia, serif';
+  g.fillText("poiēma", W / 2, 150);
+
+  g.fillStyle = col("--ink"); g.font = '500 92px "' + disp + '", Georgia, serif';
+  const tl = wrap(g, t.mirrorTitle, 900);
+  tl.forEach((l, i) => g.fillText(l, W / 2, 300 + i * 104));
+  const top = 300 + tl.length * 104;
+
+  const fw = 640, fh = 853, fx = (W - fw) / 2, fy = top + 10, pad = 34;
+  const gold = g.createLinearGradient(fx, fy, fx + fw, fy + fh);
+  gold.addColorStop(0, col("--gold-hi")); gold.addColorStop(.3, col("--gold")); gold.addColorStop(.55, col("--gold-lo"));
+  gold.addColorStop(.8, col("--gold")); gold.addColorStop(1, col("--gold-hi"));
+  g.shadowColor = "rgba(0,0,0,.6)"; g.shadowBlur = 60; g.shadowOffsetY = 30;
+  g.fillStyle = gold; g.fillRect(fx, fy, fw, fh);
+  g.shadowColor = "transparent";
+  const ix = fx + pad, iy = fy + pad, iw = fw - pad * 2, ih = fh - pad * 2;
+  if (withPhoto && hasSnap) {
+    g.drawImage($("#thumb"), ix, iy, iw, ih);
+  } else {
+    const m = g.createLinearGradient(ix, iy, ix + iw, iy + ih);
+    m.addColorStop(0, "#e3e8ee"); m.addColorStop(.45, "#8c96a2"); m.addColorStop(.7, "#cdd5de"); m.addColorStop(1, "#7a8490");
+    g.fillStyle = m; g.fillRect(ix, iy, iw, ih);
+    const s = g.createLinearGradient(ix, iy, ix + iw, iy + ih * .6);
+    s.addColorStop(.35, "rgba(255,255,255,0)"); s.addColorStop(.5, "rgba(255,255,255,.45)"); s.addColorStop(.62, "rgba(255,255,255,0)");
+    g.fillStyle = s; g.fillRect(ix, iy, iw, ih);
+  }
+  g.strokeStyle = col("--gold-lo"); g.lineWidth = 4; g.strokeRect(ix, iy, iw, ih);
+
+  // museum label
+  const py = fy + fh + 50, pw = 520, ph = 190, px = (W - pw) / 2;
+  g.fillStyle = col("--paper"); g.fillRect(px, py, pw, ph);
+  g.fillStyle = col("--paper-ink");
+  t.plate.forEach(([k, v], i) => {
+    const y = py + 60 + i * 50;
+    g.font = '500 22px "' + body + '", sans-serif'; g.globalAlpha = .6;
+    g.textAlign = rtl ? "right" : "left";
+    g.fillText(k.toUpperCase(), rtl ? px + pw - 36 : px + 36, y);
+    g.globalAlpha = 1; g.font = '500 34px "' + disp + '", serif';
+    g.textAlign = rtl ? "left" : "right";
+    g.fillText(v, rtl ? px + 36 : px + pw - 36, y);
+  });
+  g.textAlign = "center";
+
+  g.fillStyle = col("--muted"); g.font = '400 30px "' + body + '", sans-serif';
+  g.fillText(L[lang].s[3].r, W / 2, py + ph + 80);
+  g.fillStyle = col("--gold-hi"); g.font = 'italic 400 40px "' + disp + '", serif';
+  g.fillText(t.cta, W / 2, H - 140);
+
+  return new Promise((res) => c.toBlob(res, "image/png"));
+}
+
+function toast(msg) { const el = $("#toast"); el.textContent = msg; clearTimeout(toast.t); toast.t = setTimeout(() => { el.textContent = ""; }, 3500); }
+
+async function copyLink() {
+  const url = shareUrl();
+  try { await navigator.clipboard.writeText(url); toast(L[lang].t.copied); }
+  catch (e) { toast(url); }
+}
+
+async function share() {
+  const t = L[lang].t, url = shareUrl();
+  const blob = await makeStory($("#usePhoto").checked);
+  const file = blob ? new File([blob], "masterpiece-" + lang + ".png", { type: "image/png" }) : null;
+  try {
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], text: t.shareText + " " + url });
+      return;
+    }
+    if (navigator.share) { await navigator.share({ title: t.mirrorTitle, text: t.shareText, url }); return; }
+  } catch (e) { if (e && e.name === "AbortError") return; }
+  // fallback: save the image, copy the link
+  if (blob) {
+    let done = false;
+    try {
+      if (window.claude && window.claude.use) {
+        const dl = await window.claude.use("downloads");
+        if (dl) { await dl.save({ filename: "masterpiece-" + lang + ".png", data: blob }); done = true; }
+      }
+    } catch (e) {}
+    if (!done) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = "masterpiece-" + lang + ".png";
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }
+  }
+  await copyLink();
+}
+
+/* ---------- in-app browsers (Instagram, Facebook, TikTok...) ---------- */
+const INAPP = /Instagram|FBAN|FBAV|FB_IAB|FBIOS|Messenger|Snapchat|TikTok|musical_ly|BytedanceWebview|Line\//i.test(navigator.userAgent || "");
+function updateInapp() {
+  $("#inapp").hidden = !INAPP;
+  if (!INAPP) return;
+  const a = $("#inappOpen");
+  if (/Android/i.test(navigator.userAgent)) {
+    const u = new URL(shareUrl());
+    a.href = "intent://" + u.host + u.pathname + u.search + "#Intent;scheme=https;package=com.android.chrome;end";
+    a.hidden = false;
+  } else {
+    a.hidden = true;
+  }
+}
+
+/* ---------- wire up ---------- */
+
+const sel = $("#langSel");
+ORDER.forEach((c) => { const o = document.createElement("option"); o.value = c; o.textContent = L[c].name; sel.append(o); });
+sel.addEventListener("change", () => setLang(sel.value));
+
+$("#openBtn").addEventListener("click", async () => {
+  const b = $("#openBtn"); b.disabled = true;
+  await Promise.race([startCam(), new Promise((r) => setTimeout(r, 12000))]);
+  $("#book").classList.add("open");
+  setTimeout(() => { go(1); b.disabled = false; }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 950);
+});
+$("#whyBtn").addEventListener("click", () => go(2));
+$("#nextBtn").addEventListener("click", () => go(idx + 1));
+$("#backBtn").addEventListener("click", () => go(idx - 1));
+$("#restartBtn").addEventListener("click", () => { $("#book").classList.remove("open"); go(0); });
+$("#shareBtn").addEventListener("click", share);
+$("#copyBtn").addEventListener("click", copyLink);
+$("#inappCopy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(shareUrl()); $("#inappCopy").textContent = L[lang].t.copied; } catch (e) { $("#inappCopy").textContent = shareUrl(); }
+});
+$("#moreBtn").addEventListener("click", () => {
+  const p = $("#morePanel"); p.hidden = !p.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!p.hidden));
+});
+
+// swipe between reading screens
+let sx = null;
+$("#stage").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+$("#stage").addEventListener("touchend", (e) => {
+  if (sx === null || idx < 2) return;
+  const dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (Math.abs(dx) < 60) return;
+  const fwd = (L[lang].dir === "rtl") ? dx > 0 : dx < 0;
+  go(idx + (fwd ? 1 : -1));
+}, { passive: true });
+
+setLang(pickLang());
+go(0);
+</script>
+
+</body>
+</html>
