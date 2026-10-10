@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta property="og:title" content="Ty si to najväčšie majstrovské dielo">
-<meta property="og:description" content="Otvor a pozri sa.">
+<meta property="og:title" content="What is the greatest masterpiece in the world?">
+<meta property="og:description" content="Open it and see.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px)}</style>
 </head>
 <body>
 <title>Majstrovské dielo</title>
-<meta name="description" content="Ty si to najväčšie majstrovské dielo.">
+<meta name="description" content="What is the greatest masterpiece in the world?">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap">
@@ -822,7 +822,7 @@ function setLang(c) {
   const d = L[c], t = d.t;
   document.documentElement.lang = c;
   document.documentElement.dir = d.dir || "ltr";
-  document.title = t.mirrorTitle.replace(/\.$/, "");
+  document.title = t.q;
   document.querySelectorAll("[data-t]").forEach((el) => {
     const v = t[el.dataset.t];
     if (typeof v === "string") el.textContent = v;
@@ -921,7 +921,7 @@ function wrap(g, text, maxW) {
 async function makeStory(withPhoto) {
   const t = L[lang].t, rtl = L[lang].dir === "rtl";
   const disp = rtl ? "Amiri" : "EB Garamond", body = rtl ? "IBM Plex Sans Arabic" : "Manrope";
-  const sample = t.mirrorTitle + t.cta + t.plate.flat().join("") + L[lang].s[3].r;
+  const sample = t.q + t.opts + t.cta + t.plate.flat().join("") + L[lang].s[3].r;
   try { await Promise.all([document.fonts.load('500 80px "' + disp + '"', sample), document.fonts.load('italic 400 40px "' + disp + '"', sample), document.fonts.load('400 30px "' + body + '"', sample), document.fonts.load('italic 400 40px "EB Garamond"', "poiēma")]); } catch (e) {}
   const W = 1080, H = 1920, c = document.createElement("canvas");
   c.width = W; c.height = H;
@@ -938,12 +938,16 @@ async function makeStory(withPhoto) {
   g.fillStyle = col("--gold"); g.font = 'italic 400 40px "EB Garamond", Georgia, serif';
   g.fillText("poiēma", W / 2, 150);
 
-  g.fillStyle = col("--ink"); g.font = '500 92px "' + disp + '", Georgia, serif';
-  const tl = wrap(g, t.mirrorTitle, 900);
-  tl.forEach((l, i) => g.fillText(l, W / 2, 300 + i * 104));
-  const top = 300 + tl.length * 104;
+  g.fillStyle = col("--ink"); g.font = '500 84px "' + disp + '", Georgia, serif';
+  const tl = wrap(g, t.q, 900);
+  tl.forEach((l, i) => g.fillText(l, W / 2, 290 + i * 96));
+  let top = 290 + (tl.length - 1) * 96 + 46;
+  g.fillStyle = col("--gold-hi"); g.font = (rtl ? '' : 'italic ') + '400 40px "' + disp + '", Georgia, serif';
+  const ol = wrap(g, t.opts, 860);
+  ol.forEach((l, i) => g.fillText(l, W / 2, top + 50 + i * 52));
+  top += 50 + ol.length * 52;
 
-  const fw = 640, fh = 853, fx = (W - fw) / 2, fy = top + 10, pad = 34;
+  const fw = 600, fh = 800, fx = (W - fw) / 2, fy = top + 20, pad = 32;
   const gold = g.createLinearGradient(fx, fy, fx + fw, fy + fh);
   gold.addColorStop(0, col("--gold-hi")); gold.addColorStop(.3, col("--gold")); gold.addColorStop(.55, col("--gold-lo"));
   gold.addColorStop(.8, col("--gold")); gold.addColorStop(1, col("--gold-hi"));
@@ -963,12 +967,12 @@ async function makeStory(withPhoto) {
   }
   g.strokeStyle = col("--gold-lo"); g.lineWidth = 4; g.strokeRect(ix, iy, iw, ih);
 
-  // museum label
-  const py = fy + fh + 50, pw = 520, ph = 190, px = (W - pw) / 2;
+  // museum label: every value hidden behind a question mark
+  const py = fy + fh + 44, pw = 460, ph = 180, px = (W - pw) / 2;
   g.fillStyle = col("--paper"); g.fillRect(px, py, pw, ph);
   g.fillStyle = col("--paper-ink");
-  t.plate.forEach(([k, v], i) => {
-    const y = py + 60 + i * 50;
+  t.plate.map(([k]) => [k, rtl ? "؟" : "?"]).forEach(([k, v], i) => {
+    const y = py + 58 + i * 48;
     g.font = '500 22px "' + body + '", sans-serif'; g.globalAlpha = .6;
     g.textAlign = rtl ? "right" : "left";
     g.fillText(k.toUpperCase(), rtl ? px + pw - 36 : px + 36, y);
@@ -978,10 +982,8 @@ async function makeStory(withPhoto) {
   });
   g.textAlign = "center";
 
-  g.fillStyle = col("--muted"); g.font = '400 30px "' + body + '", sans-serif';
-  g.fillText(L[lang].s[3].r, W / 2, py + ph + 80);
-  g.fillStyle = col("--gold-hi"); g.font = 'italic 400 40px "' + disp + '", serif';
-  g.fillText(t.cta, W / 2, H - 140);
+  g.fillStyle = col("--gold-hi"); g.font = (rtl ? '' : 'italic ') + '500 52px "' + disp + '", serif';
+  g.fillText(t.cta, W / 2, Math.min(H - 120, py + ph + 110));
 
   return new Promise((res) => c.toBlob(res, "image/png"));
 }
@@ -1000,10 +1002,10 @@ async function share() {
   const file = blob ? new File([blob], "masterpiece-" + lang + ".png", { type: "image/png" }) : null;
   try {
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], text: t.shareText + " " + url });
+      await navigator.share({ files: [file], text: t.q + " " + t.cta + " " + url });
       return;
     }
-    if (navigator.share) { await navigator.share({ title: t.mirrorTitle, text: t.shareText, url }); return; }
+    if (navigator.share) { await navigator.share({ title: t.q, text: t.q + " " + t.cta, url }); return; }
   } catch (e) { if (e && e.name === "AbortError") return; }
   // fallback: save the image, copy the link
   if (blob) {
