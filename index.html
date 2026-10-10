@@ -244,7 +244,7 @@ button, select { font: inherit; color: inherit; }
 #writeMe a, #writeMe b { color: var(--gold-hi); font-weight: 700; unicode-bidi: isolate; direction: ltr; }
 .contact p:first-child { font-family: var(--display); font-size: 21px; line-height: 1.35; color: var(--gold-hi); }
 .contact a { color: var(--gold-hi); font-weight: 700; text-underline-offset: 3px; unicode-bidi: isolate; direction: ltr; }
-.toast { min-height: 1.4em; font-size: 13px; color: var(--gold-hi); }
+.toast { min-height: 1.4em; font-size: 15px; font-weight: 500; color: var(--gold-hi); }
 .link-btn { background: none; border: 0; padding: 4px 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 14px; }
 
 /* bottom nav */
@@ -398,6 +398,7 @@ sk: { name: "Slovenčina", t: {
   heart: "Možno aj ty niekedy cítiš v srdci prázdne miesto, ktoré nič nezaplní. Ježiš ho zaplniť dokáže. Je všetko, čo naozaj potrebujeme.",
   writeSender: "Chceš vedieť viac? Napíš tomu, kto ti túto stránku poslal, a môžete spolu čítať Bibliu.",
   ownLabel: "Komu to pošleš, ten sa ozve na tento Instagram. Ak chceš, aby písali tebe, prepíš ho na svoj:",
+  storyHint: "Odkaz je skopírovaný. V Instagram story pridaj nálepku „Odkaz“ a vlož ho tam.",
   langLabel: "Jazyk",
   q: "Čo je najväčšie majstrovské dielo na svete?",
   opts: "Mona Lisa? Beethovenova Deviata? Hviezdna obloha nad horami?",
@@ -433,6 +434,7 @@ uk: { name: "Українська", t: {
   heart: "Можливо, ти іноді відчуваєш у серці порожнечу, яку ніщо не може заповнити. Ісус може її заповнити. Він — усе, що нам справді потрібно.",
   writeSender: "Хочеш дізнатися більше? Напиши тому, хто надіслав тобі цю сторінку, і ви можете разом читати Біблію.",
   ownLabel: "Ті, кому ти це надішлеш, писатимуть на цей Instagram. Якщо хочеш, щоб писали тобі, заміни його на свій:",
+  storyHint: "Посилання скопійовано. В Instagram story додай наліпку «Посилання» і встав його.",
   langLabel: "Мова",
   q: "Який найбільший шедевр у світі?",
   opts: "Мона Ліза? Дев'ята симфонія Бетховена? Зорі на нічному небі?",
@@ -468,6 +470,7 @@ es: { name: "Español", t: {
   heart: "Quizás a veces sientes un vacío en el corazón que nada parece llenar. Jesús puede llenarlo. Él es todo lo que de verdad necesitamos.",
   writeSender: "¿Quieres saber más? Escríbele a quien te mandó esta página para leer la Biblia juntos.",
   ownLabel: "Quienes reciban tu enlace escribirán a este Instagram. Si quieres que te escriban a ti, cámbialo por el tuyo:",
+  storyHint: "Enlace copiado. En tu historia de Instagram añade el sticker «Enlace» y pégalo.",
   langLabel: "Idioma",
   q: "¿Cuál es la mayor obra maestra del mundo?",
   opts: "¿La Mona Lisa? ¿La Novena de Beethoven? ¿Las estrellas del cielo de noche?",
@@ -503,6 +506,7 @@ en: { name: "English", t: {
   heart: "Maybe you sometimes feel an empty space in your heart that nothing seems to fill. Jesus can fill it. He is everything we really need.",
   writeSender: "Want to know more? Message the person who sent you this page and read the Bible together.",
   ownLabel: "People you send this to will message this Instagram. If you want them to message you, change it to yours:",
+  storyHint: "Link copied. In your Instagram story, add the “Link” sticker and paste it.",
   langLabel: "Language",
   q: "What is the greatest masterpiece in the world?",
   opts: "The Mona Lisa? Beethoven's Ninth? The stars in the night sky?",
@@ -538,6 +542,7 @@ de: { name: "Deutsch", t: {
   heart: "Vielleicht spürst du manchmal eine Leere im Herzen, die nichts füllen kann. Jesus kann sie füllen. Er ist alles, was wir wirklich brauchen.",
   writeSender: "Willst du mehr wissen? Schreib der Person, die dir diese Seite geschickt hat, und lest zusammen die Bibel.",
   ownLabel: "Wem du das schickst, der schreibt an diesen Instagram-Account. Wenn sie dir schreiben sollen, trag deinen ein:",
+  storyHint: "Link kopiert. Füge in deiner Instagram-Story den Sticker „Link“ hinzu und füge ihn dort ein.",
   langLabel: "Sprache",
   q: "Was ist das größte Meisterwerk der Welt?",
   opts: "Die Mona Lisa? Beethovens Neunte? Die Sterne am Nachthimmel?",
@@ -573,6 +578,7 @@ ro: { name: "Română", t: {
   heart: "Poate simți uneori un gol în inimă pe care nimic nu pare să-l umple. Isus îl poate umple. El este tot ce ne trebuie cu adevărat.",
   writeSender: "Vrei să afli mai mult? Scrie-i celui care ți-a trimis pagina asta și citiți Biblia împreună.",
   ownLabel: "Cei cărora le trimiți vor scrie la acest Instagram. Dacă vrei să-ți scrie ție, pune-l pe al tău:",
+  storyHint: "Link copiat. În story-ul de Instagram adaugă stickerul „Link” și lipește-l acolo.",
   langLabel: "Limba",
   q: "Care este cea mai mare capodoperă din lume?",
   opts: "Mona Lisa? Simfonia a IX-a a lui Beethoven? Stelele de pe cerul nopții?",
@@ -608,6 +614,7 @@ sr: { name: "Srpski", t: {
   heart: "Možda ponekad osećaš prazninu u srcu koju ništa ne može da popuni. Isus može da je popuni. On je sve što nam zaista treba.",
   writeSender: "Želiš da saznaš više? Piši osobi koja ti je poslala ovu stranicu i čitajte zajedno Bibliju.",
   ownLabel: "Oni kojima ovo pošalješ pisaće na ovaj Instagram. Ako želiš da pišu tebi, upiši svoj:",
+  storyHint: "Link je kopiran. U Instagram story dodaj nalepnicu „Link“ i nalepi ga.",
   langLabel: "Jezik",
   q: "Koje je najveće remek-delo na svetu?",
   opts: "Mona Liza? Betovenova Deveta? Zvezde na noćnom nebu?",
@@ -643,6 +650,7 @@ hr: { name: "Hrvatski", t: {
   heart: "Možda ponekad osjećaš prazninu u srcu koju ništa ne može ispuniti. Isus je može ispuniti. On je sve što nam zaista treba.",
   writeSender: "Želiš znati više? Napiši osobi koja ti je poslala ovu stranicu i čitajte zajedno Bibliju.",
   ownLabel: "Oni kojima ovo pošalješ pisat će na ovaj Instagram. Ako želiš da pišu tebi, upiši svoj:",
+  storyHint: "Poveznica je kopirana. U Instagram story dodaj naljepnicu „Poveznica“ i zalijepi je.",
   langLabel: "Jezik",
   q: "Koje je najveće remek-djelo na svijetu?",
   opts: "Mona Lisa? Beethovenova Deveta? Zvijezde na noćnom nebu?",
@@ -678,6 +686,7 @@ ar: { name: "العربية", dir: "rtl", t: {
   heart: "ربما تشعر أحيانًا بفراغ في قلبك لا يملؤه شيء. يسوع يستطيع أن يملأه. هو كل ما نحتاجه حقًا.",
   writeSender: "تريد أن تعرف المزيد؟ راسل الشخص الذي أرسل لك هذه الصفحة واقرآ الكتاب المقدس معًا.",
   ownLabel: "من ترسل لهم هذا سيراسلون حساب إنستغرام هذا. إن أردت أن يراسلوك أنت، اكتب حسابك:",
+  storyHint: "تم نسخ الرابط. في قصة إنستغرام أضف ملصق «الرابط» والصقه فيه.",
   langLabel: "اللغة",
   q: "ما هي أعظم تحفة فنية في العالم؟",
   opts: "الموناليزا؟ السيمفونية التاسعة لبيتهوفن؟ النجوم في سماء الليل؟",
@@ -713,6 +722,7 @@ pt: { name: "Português", t: {
   heart: "Talvez você às vezes sinta um vazio no coração que nada parece preencher. Jesus pode preenchê-lo. Ele é tudo de que realmente precisamos.",
   writeSender: "Quer saber mais? Escreva para quem te mandou esta página e leiam a Bíblia juntos.",
   ownLabel: "Quem receber o seu link vai escrever para este Instagram. Se quiser que escrevam para você, coloque o seu:",
+  storyHint: "Link copiado. No seu story do Instagram, adicione a figurinha “Link” e cole.",
   langLabel: "Idioma",
   q: "Qual é a maior obra-prima do mundo?",
   opts: "A Mona Lisa? A Nona Sinfonia de Beethoven? As estrelas no céu à noite?",
@@ -748,6 +758,7 @@ pl: { name: "Polski", t: {
   heart: "Może czasem czujesz w sercu pustkę, której nic nie potrafi wypełnić. Jezus może ją wypełnić. On jest wszystkim, czego naprawdę potrzebujemy.",
   writeSender: "Chcesz wiedzieć więcej? Napisz do osoby, która wysłała ci tę stronę, i czytajcie razem Biblię.",
   ownLabel: "Osoby, którym to wyślesz, napiszą na ten Instagram. Jeśli chcesz, żeby pisali do ciebie, wpisz swój:",
+  storyHint: "Link skopiowany. W relacji na Instagramie dodaj naklejkę „Link” i wklej go.",
   langLabel: "Język",
   q: "Jakie jest największe arcydzieło na świecie?",
   opts: "Mona Lisa? IX Symfonia Beethovena? Gwiazdy na nocnym niebie?",
@@ -984,11 +995,16 @@ async function makeStory(withPhoto) {
 
   g.fillStyle = col("--gold-hi"); g.font = (rtl ? '' : 'italic ') + '500 52px "' + disp + '", serif';
   g.fillText(t.cta, W / 2, Math.min(H - 120, py + ph + 110));
+  const addr = (SITE_URL || (location.origin + location.pathname)).replace(/^https?:\/\//, "").replace(/\/$/, "");
+  if (/^https?:/.test(SITE_URL || location.protocol)) {
+    g.direction = "ltr"; g.fillStyle = col("--muted"); g.font = '500 30px "Manrope", sans-serif';
+    g.fillText(addr, W / 2, Math.min(H - 60, py + ph + 170));
+  }
 
   return new Promise((res) => c.toBlob(res, "image/png"));
 }
 
-function toast(msg) { const el = $("#toast"); el.textContent = msg; clearTimeout(toast.t); toast.t = setTimeout(() => { el.textContent = ""; }, 3500); }
+function toast(msg, ms) { const el = $("#toast"); el.textContent = msg; clearTimeout(toast.t); toast.t = setTimeout(() => { el.textContent = ""; }, ms || 3500); }
 
 async function copyLink() {
   const url = shareUrl();
@@ -998,15 +1014,19 @@ async function copyLink() {
 
 async function share() {
   const t = L[lang].t, url = shareUrl();
+  let copied = false;
+  try { await navigator.clipboard.writeText(url); copied = true; } catch (e) {}
+  const hint = () => { if (copied) toast(t.storyHint, 12000); };
   const blob = await makeStory($("#usePhoto").checked);
   const file = blob ? new File([blob], "masterpiece-" + lang + ".png", { type: "image/png" }) : null;
   try {
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({ files: [file], text: t.q + " " + t.cta + " " + url });
+      hint();
       return;
     }
     if (navigator.share) { await navigator.share({ title: t.q, text: t.q + " " + t.cta, url }); return; }
-  } catch (e) { if (e && e.name === "AbortError") return; }
+  } catch (e) { if (e && e.name === "AbortError") { hint(); return; } }
   // fallback: save the image, copy the link
   if (blob) {
     let done = false;
