@@ -379,7 +379,7 @@ const SITE_URL = "https://sajmn222.github.io/masterpiece/";
 /* Who readers are invited to write to. The link carries it (?c=@handle): whoever shares can put their own
    Instagram in; if they don't, the contact from the link they received travels on. DEFAULT_CONTACT is used
    when a link has none; leave it empty to say "write to the person who sent you this". */
-const DEFAULT_CONTACT = "";
+const DEFAULT_CONTACT = "@simon.turcina";
 function cleanContact(v) {
   v = String(v || "").trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i, "@").replace(/\/.*$/, "");
   if (/^[A-Za-z0-9._]{1,30}$/.test(v)) v = "@" + v;
