@@ -1145,7 +1145,8 @@ sel.addEventListener("change", () => setLang(sel.value));
 
 $("#openBtn").addEventListener("click", async () => {
   const b = $("#openBtn"); b.disabled = true;
-  await Promise.race([startCam(), new Promise((r) => setTimeout(r, 12000))]);
+  // ask for the camera but never let a slow or stuck prompt keep the book closed
+  startCam().catch(() => {});
   $("#book").classList.add("open");
   setTimeout(() => { go(1); b.disabled = false; }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 950);
 });
